@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="网站名称">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>预览文章</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link type="text/css" rel="stylesheet" href="assets/neatui/css/neatui-backArtilcePreview.css"><!--预览文章-->
+    <link type="images/x-icon" rel="shortcut icon" href="/favicon.ico">
+    <script type="text/javascript">if(top.location != self.location){ top.location = self.location; }</script>
+    <base target="_self">
+</head>
+<body>
+    <div class="wrap">
+        <h1 class="caption" id="caption"></h1>
+        <div class="meta">
+            <div class="meta__infos">
+                <span class="meta__typename"><label>栏目：</label><em id="typename"></em></span>
+                <span class="meta__source"><label>来源：</label><em id="source"></em></span>
+                <span class="meta__writer"><label>作者：</label><em id="writer"></em></span>
+                <span class="meta__hits"><label>浏览：</label><em id="hits"></em></span>
+                <span class="meta__pubDate"><label>日期：</label><em id="pubDate"></em></span>
+            </div>
+            <div class="meta__describe" id="describe"></div>
+        </div>
+        <article class="content" id="content"></article>
+    </div><!--/.wrap-->
+
+
+    <!--================================================================================-->
+    <!--                            JAVASCRIPT                                          -->
+    <!--================================================================================-->
+    <script type="text/javascript" src="assets/libs/jquery-1.8.3.min.js"></script><!--JQ库-->
+    <script type="text/javascript" src="assets/neatui/js/neatui-functions.js"></script><!--函数库-->
+    <script type="text/javascript" src="assets/neatui/js/neatui-ajax.js"></script><!--自定义AJAX-->
+    <script type="text/javascript">
+        /*+————————————————全局变量————————————————+*/
+        //——————————————————————————————————————————
+        // 接收URL参数 ajax({})
+        // var g_wz_bh = '<%=s_wz_bh%>'; // 文章编号
+        var g_wz_bh = '1001'; // 文章编号
+        
+
+
+        /*+————————————————FUNCTION————————————————+*/
+        /**
+        * 获取文章内容数据(单篇)
+        * @param {Number} 文章编号
+        * @returns {object} 返回一维对象
+        */
+        function get_data_essay_content(ps_wz_bh){
+            // 后台返回
+            var json = {
+                "return":"ok",
+                "title":"LPR利率下调后，上海多家银行首套房房贷利率降至4.8%",
+                "sslm":"购房政策查询",
+                "ope_url": "", // 跳转地址
+                "nrzy":"上海房贷利率已经按照新的LPR利率下调，不过，距离下限4.25%仍有距离。今天，记者从沪上多家银行信贷人士处获悉，目前LPR利率下调已经在上海房贷市场落地，多家银行已经在原有利率基础上下调15个基点执行。", 
+                "content":"&lt;p&gt;上海房贷利率已经按照新的LPR利率下调，不过，距离下限4.25%仍有距离。&lt;/p&gt;&lt;p&gt;今天，记者从沪上多家银行信贷人士处获悉，目前LPR利率下调已经在上海房贷市场落地，多家银行已经在原有利率基础上下调15个基点执行。&lt;/p&gt;&lt;p&gt;浦发银行信贷部门相关人士表示，目前其&lt;strong&gt;执行&lt;/strong&gt;的首套房和二套房利率分别为4.8%和5.5%，均比之前的4.95%和5.65%有所下调。&lt;/p&gt;",
+                "wzly":"本站",
+                "wzzz":"房小信",
+                "llcs":"185",
+                "create_time":"2022-05-31 14:28-37",
+                "modify_time":"2022-06-31 14:28-52"
+            }
+            /*
+            // START AJAX
+            var json = {}
+            var isHoldOn = true;
+            ajax({
+                heading: "获取文章内容数据",
+                debug: false,
+                async: false, // 取数方式. true 异步, false 同步(默认)
+                type: "GET",
+                dataType: "html",
+                cache: false,
+                url: "../fwh_pub/jk_pub.ashx",
+                data: {
+                    "action": "sel_fjx_pub_news_one_pc",
+                    "user": "<%=s_user%>",
+                    "sjk": "<%=s_sjk%>",
+                    "wz_bh": ps_wz_bh
+                },
+                success: function(res){
+                    if(toolTip.mistakeTips(res, this.url, this.heading, this.debug)) { isHoldOn = false; return; }
+                    // if(res == '') return;
+                    json = JSON.parse(res);
+                },
+                error: function(res){
+                    if(toolTip.wrongTips(res, this.url, this.heading, this.debug)) { isHoldOn = false; return; }
+                },
+                beforeSend: function(XMLHttpRequest){ },
+                complete: function(XMLHttpRequest, textStatus){ }
+            })
+            if(!isHoldOn){
+                neui.destroyAnimate();
+                return {}
+            }
+            // END AJAX
+            */
+
+            return json;
+        }
+
+
+
+        //================================================
+        /**
+        * 创建文章内容
+        * @param {object} ps_source 数据源
+        */
+        function create_essay_content(ps_source){
+            var ls_title = ps_source["title"],
+                ls_sslm = ps_source["sslm"];
+                ls_wzly = ps_source["wzly"],
+                ls_wzzz = ps_source["wzzz"],
+                ls_llcs = ps_source["llcs"],
+                ls_create_time = ps_source["create_time"],
+                ls_nrzy = typeof ps_source["nrzy"] == 'undefined' ? '' : ps_source["nrzy"],
+                ls_content = utilities.htmlDecode(ps_source["content"]);
+
+            $('title').text(ls_title);
+            $('#caption').text(ls_title);
+            $('#typename').text(ls_sslm);
+            $('#source').text(ls_wzly);
+            $('#writer').text(ls_wzzz);
+            $('#hits').text(ls_llcs);
+            $('#pubDate').text(ls_create_time);
+            $('#describe').html(ls_nrzy == '' ? '' :  '<span>摘要：</span>' + ls_nrzy);
+            $('#content').html(ls_content);
+
+            if(ls_wzly.toString().replace(/([ ]+)/g, '') == '') $('.meta__source').hide();
+            if(ls_wzzz.toString().replace(/([ ]+)/g, '') == '') $('.meta__writer').hide();
+            if(ls_llcs.toString().replace(/([ ]+)/g, '') == '') $('.meta__hits').hide();
+            if(ls_create_time.toString().replace(/([ ]+)/g, '') == '') $('.meta__pubDate').hide();
+            if(ls_nrzy.toString().replace(/([ ]+)/g, '') == '') $('.meta__describe').hide();
+        }
+
+
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        $(function () {
+            //————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+            //+                                                          初始化                                                 
+            //————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+            //——————————————————————————————————————————
+            //=====加载数据
+            var articleJson = get_data_essay_content(g_wz_bh);
+            create_essay_content(articleJson);
+
+
+        }); //$(function(){});
+    </script>
+
+
+</body>
+
+</html>

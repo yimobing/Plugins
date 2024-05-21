@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="format-detection" content="telephone=no,email=no,address=no">
+    <meta name="application-name" content="">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>neui后台管理系统</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link type="text/css" rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css">
+    <link type="text/css" rel="stylesheet" href="assets/neatui/css/neatui-backstage.css">
+    <!--<link type="images/x-icon" rel="shortcut icon" href="/favicon.ico" />-->
+    <script type="text/javascript">if(top.location != self.location){ top.location = self.location; }</script>
+    <!--[if lt IE 9]>
+         <script type="text/javascript" src="assets/libs/html5shiv.min.js"></script>
+         <script type="text/javascript" src="assets/libs/respond.min.js"></script>
+         <script type="text/javascript" src="assets/libs/rem.min.js"></script>
+         <script type="text/javascript" src="assets/libs/json2.min.js"></script>
+     <![endif]-->
+    <base target="_self">
+</head>
+<body>
+    <div class="wrap">
+        <section id="section-backstage"></section>
+    </div><!--/.wrap-->
+
+
+    <script type="text/javascript" src="assets/libs/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="assets/neatui/js/neui-backstage.js"></script>
+    <script type="text/javascript">
+        
+        $(function(){
+
+        	
+            /*+---------------------------------------------+*/
+            // =====顶部菜单栏json(可选)
+            /*
+            	· title 名称
+            	· name 自定义按钮ID(可选)
+            	· icon 自定义图标. 是一张图片或font-awesome图标， 当display="image"时,本参数必填
+            	· display 显示方式(可选). image 图片(默认), text 文本, submit 按钮(.net按钮)
+            		说明：若页面一定要使用.net的按钮，则
+			           	  	第1步，设置 display="submit", name="btn_turnoff"(这里name值可随意)
+			           		第2步，在.aspx页面任意位置拉一个Button按钮，文本设置为“退出”，ID设置为 btn_turnoff（必须跟第1步的name一致）,且设置它不显示(隐藏状态，不影响布局，否则右而主体部分会出现滚动条)
+			           				eg. asp:Button ID="btn_turnoff" Text="退出" OnClick="btn_turnoff_Click" runat="server" style="display: none"/>
+			           		第3步，双击一下该按钮，在.aspx.cs页面会产生一个 btn_turnoff_Click的事件，在此事件中可以写任何.net代码
+			           		第4步，以后点自定的“退出”按钮，相当于点击.net按钮了。
+
+            */
+            var menuJson = {
+                data:[
+                    {title:"邮件", name:"envelope", icon:"assets/neatui/img/cms-menu-envelope-white.png", display:"image"},
+                    {title:"最新消息", name:"notice", icon:"assets/neatui/img/cms-menu-notice-white.png"},
+                    {title:"关闭", name:"turnoff1", icon:"assets/neatui/img/cms-menu-turnoff-white.png"},
+                    {title:"退出", name:"btn_turnoff", display:"submit"}
+                ]
+            }
+
+
+            /*+---------------------------------------------+*/
+            // =====顶部导航搜索框HTML(可选)
+            var searchHtml = [
+                '<div class="nav-menu-box"><i class="icon icon-search"></i><input type="text"></div><!--/.nav-menu-box-->',
+                '<div class="nav-menu-box"><i class="icon icon-search"></i><input type="text"></div><!--/.nav-menu-box-->'
+            ].join('\r\n');
+
+
+
+            /*+---------------------------------------------+*/
+            // =====顶部右上角下拉菜单json
+            /*
+	            · title 名称
+	           	· type 类型(可选), 值： link 链接（默认），button 普通按钮, submit 验证按钮(用于.net 按钮)
+	           		说明：若页面一定要使用.net的按钮，则
+			           	  	第1步，设置 type="submit", name="btn_loggout"(这里name值可随意)
+			           		第2步，在.aspx页面任意位置拉一个Button按钮，文本设置为“退出”，ID设置为 btn_loggout（必须跟第1步的name一致）
+			           				eg. asp:Button ID="btn_loggout" Text="退出" OnClick="btn_loggout_Click" runat="server" />
+			           		第3步，双击一下该按钮，在.aspx.cs页面会产生一个 btn_loggout_Click的事件，在此事件中可以写任何.net代码
+			           		第4步，以后点自定的“退出”按钮，相当于点击.net按钮了。
+	           		
+	            · name 自定义按钮ID(可选)
+	            · url 链接url(可选), 只有type="button"时有效
+	            · icon 自定义图标，或使用font-awesome图标
+            */
+            var userDropJson = {
+                data:[
+                    {title:"个人中心", type:"link", url:"https://www.baidu.com/", icon:"edit"}, // 使用font-awesome图标
+                    {title:"微信", type:"link", url:"https://wx.qq.com/", icon:"assets/neatui/img/cms-menu-weixin.png"}, // 自定义图标
+                    {title:"聊天", type:"button", name:"btn_touch", icon:"weixin"},
+                    {title:"退出", type:"submit", name:"btn_loggout", icon:"sign-out"} // .net按钮
+                ]
+            }
+
+
+
+
+            /*+---------------------------------------------+*/
+            // =====左侧导航菜单json(最多支持四级菜单)
+            /**
+            	· id 菜单编号(可选)
+            	· title 菜单名称(可选)
+            	· url 菜单地址(可选)
+            	· icon 菜单图标(font-awesome图标或图片URL)(可选)
+            */
+            var navJson = {
+                data:[
+                    {id:"1001", title:"搜狗", url:"https://www.sogou.com/", icon:"assets/neatui/img/cms-nav-computer.png", icon_on:"assets/neatui/img/cms-login-mobile-iphone.png",},
+                    {id:"1002", title:"必应", url:"", icon:"assets/neatui/img/cms-nav-computer.png", icon_on:"assets/neatui/img/cms-login-mobile-iphone.png",
+                      data:[
+                        {id:"1021", title:"菜鸟教程", url:"https://www.runoob.com/", "icon":"scissors"},
+                        {id:"1022", title:"必应搜索", url:"https://cn.bing.com/", "icon":"search", data:[]}
+                      ]
+                    },
+                    {id:"1003", title:"360", url:"", icon:"assets/neatui/img/cms-nav-computer.png", icon_on:"assets/neatui/img/cms-login-weixin.png",
+                      data:[
+                        {id:"1023", title:"360搜索", url:"", icon:"assets/neatui/img/cms-nav-computer.png", icon_on:"assets/neatui/img/cms-login-user.png",
+                          data:[
+                            {id:"1031", title:"关键词", url:""},
+                            {id:"1032", title:"下拉词", url:""},
+                            {id:"1033", title:"联想词", url:""}
+                          ]
+                        },
+                        {id:"1024", title:"360联盟", url:"", icon:"assets/neatui/img/cms-nav-computer.png",
+                          data:[
+                            {id:"1034", title:"SSP联盟", url:"", icon:"assets/neatui/img/cms-nav-computer.png",
+                              data:[
+                                {id:"1041", title:"按万IP"},
+                                {id:"1042", title:"按点击"}
+                              ]
+                            },
+                            {id:"1034", title:"网络联盟", url:"", icon:"assets/neatui/img/cms-nav-computer.png",
+                              data:[
+                                {id:"1041", title:"CCPI"},
+                                {id:"1042", title:"CCPV"}
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {id:"1004", title:"百度", url:"", icon:"assets/neatui/img/cms-nav-computer.png",
+                      data:[
+                        {id:"1024", title:"百度搜索", url:"", icon:"assets/neatui/img/cms-nav-computer.png",
+                          data:[
+                            {id:"1034", title:"关键词搜索", url:"", icon:"assets/neatui/img/cms-nav-computer.png",
+                              data:[
+                                {id:"1041", title:"指数词", url:""},
+                                {id:"1042", title:"排名词", url:""},
+                                {id:"1043", title:"流量词", url:""},
+                                {id:"1044", title:"热点词", url:""}
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                ]
+            }
+
+
+
+            /*var navJson = {
+                data:[
+                    {"编号":"1001", "名称":"搜狗", "地址":"https://www.sogou.com/"},
+                    {"编号":"1002", "名称":"必应", "地址":"", icon:"assets/neatui/img/cms-nav-computer.png",
+                      data:[
+                        {"编号":"1021", "名称":"菜鸟教程", "地址":"https://www.runoob.com/", "图标":"scissors"},
+                        {"编号":"1022", "名称":"必应搜索", "地址":"https://cn.bing.com/", "图标":"search"}
+                      ]
+                    }
+                ]
+            }*/
+
+
+
+
+
+            /*+---------------------------------------------+*/
+            // =====调用控件创建系统界面
+            NeuiBackStage("#section-backstage", {
+                system: { // 系统信息(可选)
+                    // 品牌信息
+                    webtitle: "neui后台管理系统", // 主标题
+                    subtitle: "版本V1.0.0", // 副标题
+                    logo: "", // LOGO图片地址(相对)(可选,此时系统调用默认内置默认LOGO)
+                    //
+                    userDropSource: userDropJson, // 用户信息下拉数据源
+                    homePage: "assets/html/welcome.html" // 默认首页(可选)
+                },
+                userInfo: { // 用户信息(可选)
+                    avatar: "assets/neatui/img/cms-avatar-male.jpg", // 头像
+                    username: "张三", // 用户名
+                    duty: "副总经理" // 用户头衔（如职称、工龄等）
+                },
+                isShowTopBar: true, // 是否显示顶部菜单栏(可选). 默认true
+                menuSource: menuJson, // 顶部菜单栏数据源
+                menuFormat: ["title", "icon", "name", "display"], // 自定义顶部菜单栏数据源字段格式(可选)(待开发)
+                searchBox: searchHtml, // 顶部搜索框HTML(可选)
+                // 右侧主体区域
+                isMainHasPad: true, // 右侧主体区域与左侧是否保留一定距离(可选)，默认false。
+                mainBar: { // 右侧主体区域(可选)
+                    enablePad: true, // 右侧主体区域与左侧是否保留一定距离(可选)，默认false。
+                    padDistance: 5 // 距离值(可选)，默认5px
+                },
+                // 标签页功能
+                useTabPage: true, // 是否启用标签页功能(可选)，默认true。类型似于浏览器以新标签页打开一个窗口。
+                isRemindWhenCloseTabPage: false, // 当标签页关闭时是否弹出提示信息提醒关闭(可选)，默认false。
+                isCtrlOpenTabPage: true, // 当按住ctrl键时是否同时在浏览器中打开页面(可选)，默认true。
+                isTabUseContextMenu: true, // 标签页是否使用右键菜单功能(可选), 默认true。
+
+                navSource: navJson, // 左侧导航栏数据源. 最多支持四级菜单
+                navFormat: ["id", "title", "url", "icon", "icon_on"], // 自定义左侧导航栏数据源字段格式(可选)
+                // navFormat: ["编号", "名称", "地址", "默认的图标", "高亮时的图标"], 
+                sidebar: { // 侧栏
+                    isFixed: true, // 是否固定侧栏(可选)。默认true
+                    width: 260, // 自定义侧栏宽度(可选)。默认260px
+                    unfoldAll: false, // 是否默认展开所有菜单(可选)。默认false
+                    defaultStretch: true, // 是否默认展开侧栏(可选)。默认true。 false时侧栏将缩起来
+                    enableStretch: true, // 是否允许侧栏伸缩。默认true
+                    enableDefaultIcon: false, // 菜单图标为空时，是否使用系统默认的图标。默认true
+                    isShowMenuIcon: true, // 是否显示菜单图标(可选)。默认true
+                    menuIconDefault: "desktop", // 菜单图标为空时的默认菜单图标(font-awesome图标或图片URL)
+                    menuIconLocate: "left", // 菜单图标位置(可选)。right 右侧（默认），left 左侧
+                    isShowTreeLine: true, // 是否显示菜单树级线(可选)。默认true
+                    isShowTreeIcon: true, // 是否显示树级图标(可选)。默认true
+                    isShowArrowIcon: true, // 是否显示箭头图标(可选)。默认true
+                    isShowAvatar: false, //是否显示用户头像(可选). 默认true。仅当isShowBrand=false时有效。
+				            isShowBrand: true, // 是否显示品牌信息(可选)。默认false。false时品牌信息展示在顶栏，true时展示在侧栏且不显示用户头像。
+                    callback: function(e){ // 点击菜单项时的回调函数. 参数e格式{id:"", title:"", url:""} 其中：id 菜单编号，title 菜单名称, url 菜单url
+                        // console.log("e:", e);
+                    }
+                },
+                scrollBar: { // 侧栏滚动条
+                    enableBeautify: true, // 是否美化滚动条样式，只适用于webkit内核的浏览器（如谷歌、360极速模式、Safary）(可选)。默认true
+                    scrollColor: "blue", // 滚动条颜色。 blue 天蓝色(默认), purple 紫色(默认)，lightblue 浅蓝， red 红色，lightred 浅红，green 绿色，lightgreen 浅绿， yellow 黄色，lightyellow 浅黄
+                    scrollWidth: 10 // 滚动条宽度(可选)。 值：10，5，3，2，1，0。默认10px
+                },
+                // 回调
+			          onResize: function(e){ } // 窗口变化时的回调函数. e参数： {fullscreen: "窗口是否全屏化. true or false"}
+                
+            });
+
+
+        });
+    </script>
+</body>
+</html>

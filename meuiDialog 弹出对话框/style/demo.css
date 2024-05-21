@@ -1,0 +1,489 @@
+@charset "utf-8";
+/*
+* 抽奖系统-开始抽奖移动端样式
+*/
+html,body{width:100%;margin:0;padding:0;}
+body{
+  font-family:'Hiragino Sans GB W3','Hiragino Sans GB','microsoft yahei','Sim sun','Helvetica Neue',Helvetica,sans-serif;
+    background-color:#ff6b6b;
+    background: -webkit-linear-gradient(top,#fa6142,#fb6243,#f05b3b,#e95a3a,#c54b33,#b8462c,#ad452c,#a5402a);
+    background: -o-linear-gradient(top,#fa6142,#fb6243,#f05b3b,#e95a3a,#c54b33,#b8462c,#ad452c,#a5402a);
+    background: -moz-linear-gradient(top,#fa6142,#fb6243,#f05b3b,#e95a3a,#c54b33,#b8462c,#ad452c,#a5402a);
+    background:      linear-gradient(to bottom,#fa6142,#fb6243,#f05b3b,#e95a3a,#c54b33,#b8462c,#ad452c,#a5402a);
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fa6142', endColorstr='#b8462c'); 
+    overflow-x:hidden;
+}
+*{box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-bos-sizing:border-box;}
+/*+-----------------------------------------+*/
+/*header*/
+header{
+  width:100%;
+  margin:0 auto;
+  padding:0 8px;
+}
+h1{
+  margin:8px auto 10px auto;
+  font-size:24px;
+  font-weight:bold;
+  text-align:center;
+  color: #fefefe;
+  display:none;
+}
+.panel-user{
+  margin:5px auto;
+  padding:3px;
+  border:1px solid #ba1911;
+  border-left:0;
+  border-right:0;
+  border-radius:3px;
+  text-align:center;
+  font-size:16px;
+  color:#ba1911;
+}
+.panel-user label{width:auto;color:inherit;}
+.panel-user .icon-user{
+  display:inline-block;
+  width:20px;
+  height:20px;
+  margin-right:5px;
+  background:url('../images/icon_people.png') center no-repeat;
+  background-size:16px auto;
+  vertical-align:middle;
+}
+.panel-user span{}
+.panel-user .weui-one{margin-bottom:0;}
+.panel-user .weui-l{width:50%;}
+
+/*ads*/
+.panel-ads{
+  margin-top:8px;
+  padding:3px;
+  border:1px solid #fff;
+  border-radius:4px;
+  background-color:#fafafa;
+  /*box-shadow:0 2px 8px rgba(0,0,0,.35);*/
+  outline:0;
+}
+.panel-ads>p{
+  line-height:1.45;
+  font-size:16px;
+  color: #1cbfbf;
+  color: #888;
+  text-align:center;
+  outline:0;
+}
+.panel-ads>p em{
+  margin:0 3px;
+  font-size:1.25em;
+  color:#f60;
+  font-weight:600;
+}
+.panel-ads>p:nth-child(2){color:#fdc301;color: #888;font-size:14px;}
+.panel-ads>p:nth-child(2) em{color: #1cbfbf;color: #f60;font-size:1.1em;font-weight:normal;}
+.panel-ads-2{margin-top:5px;background-color: #f3ecda;}
+.panel-ads-2>p{color: #f1691c;}
+.panel-ads-2>p>span{margin-right:8px;}
+
+
+/*statement*/
+.panel-statement{text-align:center;color:#fff;}
+.panel-statement>p{line-height:1.5;font-size:14px;}
+.panel-statement>p:nth-child(2){font-size:16px;}
+.panel-statement>p>span{margin:0 3px;color:#fdc301;}
+.panel-statement>p>span>em{display:inline-block;margin:0 2px;font-weight:bold;font-size:18px;}
+
+.panel-topbtn{
+  position:relative;
+  width:100%;
+}
+#btn_prize{
+  position:absolute;
+  z-index:5;
+  right:0;
+  padding:3px 6px;
+  border:1px solid red;
+  background:none;
+  border:1px solid #fafafa;
+  border-radius:3px;
+  color:#fff;
+  cursor:pointer;
+}
+
+
+
+/*+-----------------------------------------+*/
+/*大转盘*/
+.section-rotate{
+  width:100%;
+  margin:8px auto 0 auto;
+  text-align:center;
+}
+.panel-start{margin:0 auto;}
+.turntable-bg {
+  width: 350px;
+  height:350px;
+  position: relative;
+  background-image: url("../images/turntable-bg.png");
+	background-position:50% 50%;
+	background-size:100% auto;
+	background-repeat:no-repeat;
+}
+.turntable-bg-1{background-image: url("../images/turntable-bg-1.png");}
+.turntable-bg-2{background-image: url("../images/turntable-bg-2.png");}
+.turntable-bg-3{background-image: url("../images/turntable-bg-3.png");}
+.turntable-bg .mask {
+  width: 454px;
+  height: 451px;
+  position: absolute;
+  left: 116px;
+  top: 60px;
+  /*z-index:9;*/
+}
+.turntable-bg .pointer {
+  width:65px;
+  height:auto;
+  margin:0 auto;
+  position: absolute;
+  left:0;
+  right:0;
+  top: 46%;
+  transform:translateY(-50%);
+
+
+  -webkit-transform:translateY(-50%);
+  -moz-transform:translateY(-50%);
+  -o-transform:translateY(-50%);
+  -ms-transform:translateY(-50%);
+  z-index: 8;
+  cursor:pointer;
+}
+.turntable-bg .pointer:focus{outline:none;}
+.turntable-bg .pointer img{width:100%;height:auto;outline:none;}
+.turntable-bg .rotate {
+  position: absolute;
+  left:0;
+  right:0;
+  top:43.5%;
+  transform:translateY(-50%);
+  -webkit-transform:translateY(-50%);
+  -moz-transform:translateY(-50%);
+  -o-transform:translateY(-50%);
+  -ms-transform:translateY(-50%);
+  width: 100%;
+  height: auto;
+  margin:0 auto;
+}
+
+
+/*不显示抽奖背景图片时*/
+.turntable-bg.no-bg{ 
+  width:260px;
+  height:256px;
+  background-image:none;
+  background-color:#d4d1ce;
+  border:1px solid #f7f4f4;
+  border-radius:200%;
+  box-shadow:0 1px 3px rgba(0,0,0,.5);
+} 
+.turntable-bg.no-bg .rotate{top:45.5%}
+
+/*+-----------------------------------------+*/
+/**/
+.panel-details{position:relative;margin:8px auto 0 auto; text-align:center;}
+.panel-details>div{
+  position:absolute;
+  z-index:5;
+  left:0;
+  right:0;
+  margin:0 auto;
+}
+.panel-details a{
+  margin-right:15px;
+  color:#fff;
+  text-decoration:underline;
+  font-size:14px;
+  cursor:pointer;
+}
+
+/*+-----------------------------------------+*/
+/*幸运名单*/
+.section-namelist{width:90%;height:223px;margin:45px auto;overflow:hidden;}
+.nameTitle{font-size:20px;color:#fdc301;text-align:center;}
+.nameTitle:before,
+.nameTitle:after{
+  content:'';
+  display:inline-block;
+  width:35%;
+  height:1px;
+  background-color:#fdc301;
+  vertical-align:middle;
+}
+.nameTitle:before{margin-right:5px;}
+.nameTitle:after{margin-left:5px;}
+
+.nameScroll>ul{
+  position:relative;
+  width:100%;
+  height:152px;
+  margin:10px auto;
+  padding:8px 12px;
+  background-color:#fff;
+  border-radius:5px;
+  overflow:hidden;
+}
+.nameScroll>ul>li{
+  display:flex;
+  display:-webkit-box;
+  display:-webkit-flex;
+  display:-moz-box;
+  display:-ms-flexbox;
+  display:box;
+  position:absolute;
+  left:15px;
+  right:15px;
+  height:30px;
+  line-height:30px;
+  margin:0 auto;
+  border-bottom:1px solid #f5f5f5;
+}
+.nameScroll>ul>li>span,
+.nameScroll>ul>li>em,
+.nameScroll>ul>li>i{
+  display:inline-block;
+  color:#666;
+  font-size:12px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.nameScroll>ul>li>span{width:40%;}
+.nameScroll>ul>li>em{width:50%;text-align:right;}
+.nameScroll>ul>li>i{width:10%;margin-left:8px;}
+.nameScroll>ul>li>.icon-gift{
+  display:inline-block;
+  height:24px;
+  background:url('../images/icon_gift_1.png') 50% 50% no-repeat;
+  background-size:24px auto;
+  vertical-align:middle;
+}
+
+/*重定义中奖弹出窗口样式*/
+#weui-awards-result{}
+#weui-awards-result .alert-content{color:#f60;}
+#weui-awards-result .alert-layout{padding-bottom:15px;margin-bottom:15px;background-color:#fff;}
+#weui-awards-result .alert-content .icon-gift{display:block;margin:10px auto 3px auto;width:60px;height:60px;background:url('../images/icon_gift_1.png') 50% 50% no-repeat;background-size:100% auto;}
+#weui-awards-result .alert-caption{background:inherit;color:inherit;padding-top:25px;padding-bottom:0;}
+#weui-awards-result .alert-button-group{width:90%;margin:0 auto;border-radius:4px;border-top:0;background-color:orange;}
+#weui-awards-result .alert-button-group>button{color:#fff;height:35px;line-height:35px;padding:0;}
+
+
+/*+-----------------------------------------+*/
+/*领奖*/
+.panel-record{width:auto;max-width:640px;margin:35px auto;}
+.record-title{text-align:center;font-size:20px;color:#fdc301;}
+.record-title:before{content:'———— ·';}
+.record-title:after{content:'· ————';}
+.record-content{width:95%;margin:15px auto 10px auto;}
+.record-content>ul{
+  display:inline-block;
+
+  width:100%;
+  margin:0 auto;
+  background-color:#fff;
+  border-radius:3px;
+}
+.record-content>ul>li{
+  border-bottom:1px solid #ddd;
+  padding:15px 20px;
+  font-size:14px;
+  text-align:left;
+  display:flex;
+  display:-webkit-box;
+  display:-moz-box;
+  display:-webkit-flex;
+  display:-ms-flexbox;
+  display:box;
+  
+}
+.record-content>ul>li>span{
+  display:inline-block;
+  width:100%;
+  margin-left:15px;
+  text-align:left;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.record-content>ul>li>span:first-child{
+  margin-left:0;
+  flex:0.9;
+  
+
+}
+.record-content>ul>li>span:nth-child(2){
+  flex:1.5;
+  
+}
+.record-content>ul>li>span:nth-child(3){
+  flex:0.6;
+  text-align:right;
+}
+.record-content>ul>li>span:nth-child(3)>em{
+  color: #888;
+
+}
+.record-content>ul>li>span:nth-child(3)>button{
+  background-color:#f60;
+  border:1px solid #f60;
+  border-radius:2px;
+  color:#fff;
+  cursor:pointer;
+}
+
+/*+-----------------------------------------+*/
+/*遮罩*/
+.weui-mask{
+	position:fixed;
+    top: 0;
+    left: 0;
+    z-index: 110;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,.75);
+    background-color: #000\9;
+    -khtml-opacity: 0.75;
+    opacity: 0.75;
+    filter: alpha(opacity=75);
+}
+
+/*+-----------------------------------------+*/
+/*弹出窗口二维码*/
+.section-erweima{
+  position:fixed;
+  z-index:112;
+  top:40%;
+  transform:translateY(-50%);
+  -webkit-transform:translateY(-50%);
+  -moz-transform:translateY(-50%);
+  -o-transform:translateY(-50%);
+  -ms-transform:translateY(-50%);
+  left:0;
+  right:0;
+  width:80%;
+  max-width:500px;
+  margin:0 auto;
+  background-color:#fff;
+  padding:35px 15px;
+  border-radius:3px;
+}
+.panel-content{
+  width:100%;
+  margin:0 auto;
+  text-align:center;
+}
+.weui-title{
+  margin-bottom:15px;
+  font-size:16px;
+  font-weight:bold;
+  color:#1296db;
+}
+.weui-content{
+  width:100%;
+  margin:0 auto;
+  text-align:center;
+}
+.weui-content img{
+  width:auto;
+  height:auto;
+  max-width:80%;
+  margin:0 auto;
+  padding:3px;
+  border:1px solid #ddd;
+  border-radius:3px;
+  text-align:center;
+}
+.panel-close{
+  position:absolute;
+  top:0px;
+  right:0px;
+  width:32px;
+  height:32px;
+}
+.panel-close>.icon-close{
+  display:block;
+  width:100%;
+  height:100%;
+  background:url('../images/icon_close_1.png') 50% 50% no-repeat;
+  background-size:24px auto;
+}
+
+
+/*+-----------------------------------------+*/
+/**活动规则*/
+.panel-rules{
+  position:fixed;
+  z-index:112;
+  top:40%;
+  transform:translateY(-50%);
+  -webkit-transform:translateY(-50%);
+  -moz-transform:translateY(-50%);
+  -o-transform:translateY(-50%);
+  -ms-transform:translateY(-50%);
+  left:0;
+  right:0;
+  width:80%;
+  max-width:500px;
+  margin:0 auto;
+  background-color:#fff;
+  padding:35px 15px;
+  border-radius:3px;
+}
+.rules-content{
+  width:100%;
+  margin:0 auto;
+  text-align:center;
+}
+.rules-content .weui-title{
+  margin-bottom:15px;
+  font-size:16px;
+  font-weight:bold;
+  color:#1296db;
+}
+.rules-content .weui-content{
+  width:100%;
+  margin:0 auto;
+  text-align:center;
+  line-height:1.75;
+  text-align:left;
+  font-size:14px;
+  color:#777;
+}
+.rules-content .weui-content>p{
+  margin-bottom:8px;
+}
+.rules-close{
+  position:absolute;
+  top:0px;
+  right:0px;
+  width:32px;
+  height:32px;
+}
+.rules-close>.icon-close{
+  display:block;
+  width:100%;
+  height:100%;
+  background:url('../images/icon_close_1.png') 50% 50% no-repeat;
+  background-size:24px auto;
+}
+
+
+
+/*媒体查询*/
+@media screen and (max-width:374px){
+  .turntable-bg {
+    width: 320px;
+    height:320px;
+  }
+  .panel-statement>p{font-size:14px;}
+  .nameTitle:before,.nameTitle:after{width:30%;}
+}

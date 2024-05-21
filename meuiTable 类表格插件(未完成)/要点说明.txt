@@ -1,0 +1,19 @@
+
+要点说明
+
+1、表格主体部分 like-fixed-body
+· 表格宽度设置在节点： .like-fixed-body
+· 表格高度设置在节点： .like-fixed-body>.like-tbody
+· 表格整体向上移动一定距离（为避免表头与固定的表格同时出现，应将主表格的表头向止移动一定的高度，高度为表头的高，即要设置节点的margin-top值为表头高度的负值）
+	.like-fixed-body .like-tbody table{
+		margin-top: - 100px; /*其中100为表头的高度*/
+	}
+
+
+·主体部分的表头、表尾的th或td标签要用append中以下内容，以撑开宽度（宽度设置才能起作用）
+<div class="like-cell" style="width:44px"></div>
+
+
+
+2、固定列部分
+

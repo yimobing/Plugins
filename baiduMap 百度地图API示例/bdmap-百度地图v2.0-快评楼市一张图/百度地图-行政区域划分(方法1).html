@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<title>百度地图行政区域划分(方法1)</title>
+	<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2COzFaICuIyVj7V3VetKfmdRVnX8BhVr"></script><!--百度地图api-->
+	<script type="text/javascript" src="js/bluebird.min.js"></script><!--使用bluebird让ie6+支持promise-->
+</head>
+
+<body>
+	<section id="allmap"></section>
+	<!--百度地图展示区域-->
+</body>
+
+</html>
+<script type="text/javascript">
+
+	/*+----------------------------------------+*/
+	//=====初始化
+	var map = new BMap.Map("allmap"); //allmap为加载地图区域的ID
+	map.centerAndZoom("泉州市", 10);
+	map.enableScrollWheelZoom();   //启用滚轮放大缩小，默认禁用
+	map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
+
+
+
+	/*+----------------FUNCTION----------------+*/
+	/**
+	 * 获得图形的中心点
+	 * @returns {point} 返回地图坐标
+	 */
+	function getCenterPoint(path) {
+		var x = 0.0;
+		var y = 0.0;
+		for (var i = 0; i < path.length; i++) {
+			x = x + parseFloat(path[i].lng);
+			y = y + parseFloat(path[i].lat);
+		}
+		x = x / path.length;
+		y = y / path.length;
+		return new BMap.Point(x, y);
+	}
+
+
+
+	
+
+
+	/**
+	 * 创建行政区域边界
+	 * @param {array} ps_area_arr 行政区域数组
+	 */
+	function createAreaBoundary(ps_area_arr){
+		var colors = ["#fff492", "#98d057", "#e19ee6", "#1ad3da", "#ffc11d", "#98e800", "#b95817", "#03a9f4", "#39d0a4", "#8bbb53"]; //背景色
+		//map.clearOverlays();	//清除所有覆盖物
+		for (var m = 0; m < ps_area_arr.length; m++) {
+			var areaName = ps_area_arr[m];
+			var bgColor = m > (colors.length - 1) ? colors[0] : colors[m];
+			createOneBoundary(areaName, bgColor);
+		}
+
+		addCustomLabel(); //添加自定义标记点文字
+	}
+
+
+	/**
+	 * 为地图添加文本标注
+	 * @poram {string} ps_label 文本信息
+	 * @param {point} ps_point 地理位置坐标
+	 * @returns {object} 返回Label实例化对象
+	 */
+	function addMapLabel(ps_label, ps_point){
+		var label = new BMap.Label(
+			ps_label, 
+			{ 
+				offset: new BMap.Size(-40, -25), //位置偏移值
+				position: ps_point, //地理位置坐标
+				enableMassClear: true //是否在调用clearOverlays时清除此覆盖物,默认true
+			}
+		);
+		label.setStyle({ //对label 样式隐藏
+			fontSize: "14px",
+			height: "20px",
+			lineHeight: "20px",
+			fontFamily: "微软雅黑",
+			color: "#1296db",
+			backgroundColor: "#fff",
+			padding: "5px 8px",
+			borderWidth: "1px",
+			borderStyle: "solid",
+			borderColor: "#0ce",
+			borderRadius: "3px",
+			zIndex: 99
+		})
+		map.addOverlay(label); //添加文本覆盖物
+		return label;
+	}
+
+
+	 /**
+     * 创建行政区域边界
+     * @param {string} ps_area 行政区域名称(如：省份、城市、区县名称)
+     * @param {string} ps_bg_color 区域形背景色
+     */
+	var viewArray = []; //多边形视野数组
+	function createOneBoundary(ps_area, ps_bg_color){
+		var areaName = ps_area;
+		var bgColor = ps_bg_color;
+		var bdary = new BMap.Boundary();
+		bdary.get(areaName, function (rs) {       //获取行政区域
+			//console.log('\n--------分隔线--------\n');
+			var count = rs.boundaries.length; //行政区域的点有多少个
+			if (count === 0) {
+				alert('未能获取当前输入行政区域');
+				return;
+			}
+            //console.log('地区：', areaName, '-count:', count, '  '-rs:', rs, '-rs.boundaries:',  rs.boundaries);
+            //创建多边形
+            var boundStr = '';
+            var ply;
+            var pointArray = []; //多边形点数组
+			for (var i = 0; i < count; i++) {
+				//console.log('rs.boundaries[i]:', rs.boundaries[i])
+                boundStr += rs.boundaries[i] + ';';
+                ply = new BMap.Polygon(rs.boundaries[i], { strokeWeight: 2, strokeColor: "#ff0000" }); //建立多边形覆盖
+                ply.setFillColor(bgColor);  //填充颜色
+			    ply.setFillOpacity(0.5); //透明度
+                map.addOverlay(ply);  //添加多边形覆盖物
+                pointArray = pointArray.concat(ply.getPath());
+			}
+			var boundaries = boundStr.substr(0, boundStr.length - 1);
+			/* var ply = new BMap.Polygon(boundaries, { strokeWeight: 2, strokeColor: "#ff0000" }); //建立多边形覆盖
+			ply.setFillColor(bgColor);  //填充颜色
+			ply.setFillOpacity(0.5); //透明度
+			map.addOverlay(ply);  //添加多边形覆盖物 */
+			//调整视野
+			viewArray = viewArray.concat(ply.getPath());		
+			map.setViewport(viewArray); //调整视野
+			//设置文本
+            var point = getCenterPoint(pointArray);
+			var label = addMapLabel(areaName, point); //添加行政区域文字信息
+			//鼠标移进移出多边形时
+			//ply.addEventListener('mouseover', function(){map.addOverlay(label)});
+			//ply.addEventListener('mouseout', function(){map.removeOverlay(label)})
+		})
+	}
+
+
+
+
+
+	//在地图上给某些自定义的坐标添加文字
+	function addCustomLabel() {
+		var viewArray = [
+			new BMap.Point(121.716076, 23.703799),
+			new BMap.Point(112.121885, 14.570616),
+			new BMap.Point(123.776573, 25.695422)];
+		var optsArray = [{}, {}, {}];
+		var labelArray = [];
+		var contentArray = [
+			"台湾是中国的！",
+			"南海是中国的！",
+			"钓鱼岛是中国的！"
+		];
+		for (var i = 0; i < viewArray.length; i++) {
+			optsArray[i].position = viewArray[i];
+			labelArray[i] = new BMap.Label(contentArray[i], optsArray[i]);
+			labelArray[i].setStyle({
+				color: "red",
+				fontSize: "12px",
+				height: "20px",
+				lineHeight: "20px",
+				fontFamily: "微软雅黑"
+			});
+			map.addOverlay(labelArray[i]);
+		}
+	}
+
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	$(function () {
+
+
+		/*+----------------------------------------+*/
+		//=====设置地图区域高度(不然在服务器环境如.net地图可能不显示)
+		var winH = $(window).height();
+		$('#allmap').css('height', winH);
+
+
+		/*+----------------------------------------+*/
+		//=====创建行政区域边界
+		setTimeout(function () {
+			var countyArr = ["石狮市", "晋江市", "南安市", "鲤城区", "丰泽区", "洛江区", "泉港区", "惠安县", "安溪县", "永春县", "德化县"]; //泉州市管理的区县
+			createAreaBoundary(countyArr);
+		}, 0);
+		
+
+
+
+		/*+----------------------------------------+*/
+		/**监听鼠标滚动事件
+		* 火狐：DOMMouseScroll;
+		* IE/Opera/Chrome：直接添加事件
+		*/
+		var scrollFunc = function(e){
+			e = e || window.event;
+			if(e.wheelDelta){ //IE/Opera/Chrome
+				mouseScrollEvent();
+			}else if(e.detail){ //Firefox
+				mouseScrollEvent();
+			}
+		}
+		if(document.addEventListener){ //W3C
+			document.addEventListener('DOMMouseScroll', scrollFunc, false);
+		}
+		window.onmousewheel = document.onmousewheel = scrollFunc; //IE/Opera/Chrome
+
+
+		/*+----------------------------------------+*/
+		//=====地图拖拽事件
+		//map.addEventListener('拖拽事件名称', function(evt){ }); //拖拽操作. 其中：“拖拽事件名称”有3个：dragstart 拖拽开始, dragging 拖拽过程, dragend 拖拽结束
+		//合起来写成如下:
+		['dragstart','dragging','dragend'].forEach(function(item, index){
+			// console.log('item:', item, ' index:', index)
+			map.addEventListener(item, function(evt){
+				if(item == 'dragstart'){
+					console.log('拖拽开始')
+				}
+				if(item == 'dragging'){
+					console.log('拖拽进行中')
+				}
+				if(item == 'dragend'){
+					console.log('拖拽结束')
+				}
+			})
+		})
+		
+
+		/*+----------------------------------------+*/
+		//=====地图放大缩小事件(鼠标滚动)
+		var mouseScrollEvent = function () {
+			var nowZoom = map.getZoom(); //当前地图缩放级别
+			console.log('当前地图绽放级别：', nowZoom);
+		}
+
+
+		/*+----------------------------------------+*/
+		//=====地图上点击事件
+		map.addEventListener('click', function(e){
+			var longitude = e.point.lng,
+				latitude = e.point.lat;
+			console.log('您点击的地方坐标为经度：', longitude, '，纬度：', latitude);
+		});
+
+
+
+	}); //END $(function(){});
+
+</script>

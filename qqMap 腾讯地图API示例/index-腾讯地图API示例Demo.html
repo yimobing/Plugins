@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+	<title>腾讯地图示例Demo(CHR)</title>
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<style>
+		html,body{width:100%;margin:0 auto;padding:0;}
+		*{margin:0;padding:0;box-sizing: border-box;-webkit-box-sizing:border-box;-moz-box-sizing: border-box;-o-box-sizing: border-box; outline:none;}
+		.section-map{position:fixed!important; z-index:10; left:0; right:0; top:5%; width:90%; height:90%!important; margin:0 auto; background-color:#fff;}
+		#map-tencent{height:auto;max-height:100%!important;}
+		#map-close{position:absolute; z-index:10; right:-15px; top:-25px; width:20px; height:20px; background-size:100% auto; background-image:url('img/icon_close_white.png'); background-repeat: no-repeat; background-position: 50% 50%; cursor: pointer;}
+		.bubbleInfo{width:auto;max-width:180px;border:1px solid #fff;border-radius:3px;font-size:14px;line-height: 1.75;} /*标记点信息窗样式*/
+		
+		h1{margin:15px auto; text-align: center;}
+		button[type="button"]{padding:8px 12px; background:#0ce; color:#fff; border:0; border-radius: 3px; cursor: pointer; }
+		.section-mask{position: fixed; z-index:1; left:0; right:0; top:0; width:100%; height:100%; background-color:#000; opacity: 0.65; filter:alpha(opacity=65); filter:progid:DXImageTransform.Microsoft.Alpha(opacity=65);}
+		#btn-location{margin-top:25px; margin-left:50%;}
+
+	</style>
+</head>
+<body>
+	<header>
+		<h1>腾讯地图示例Demo</h1>
+	</header>
+
+	<main>
+		<section class="section-map" style="display: none">
+			<div id="map-close"></div>
+			<div id="map-tencent"></div>
+		</section><!--/.section-map-->
+		<section class="section-mask" style="display: none"></section><!--/.section-mask-->
+		<section class="section-button-group">
+			<button type="button" id="btn-location">坐标(查看地图）</button>
+		</section><!--/.section-button-group-->
+	</main>
+
+
+	<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="https://map.qq.com/api/js?v=2.exp&key=6UDBZ-GKX33-JI43R-YP5O5-2E5WK-WQBYI" charset="utf-8"></script><!--腾讯地图API-->
+	<script type="text/javascript" src="js/jquery.qqmap.js"></script><!--腾讯地图自定义坐标信息(二次开发)-->
+	<script type="text/javascript">	
+		
+		/*+--------------腾讯地图坐标定位----------------+*/
+		//=====地图默认设置
+		var $centerLocation = "24.897298,118.596210"; //中心点坐标,一般为某个城市的市政府所在地的经纬度坐标
+		if($centerLocation == '') $centerLocation = '24.897298,118.596210'; //必须设置中心点,故当中心点坐标为空时要给它一个默认值
+		var $defaultZoom = 15; //默认缩放级别 4-17
+		//=====设置地图宽与高(宽写在css里)
+		var winH = $(window).height();
+		$('#map-tencent').css('height',winH);
+		//=====设置中心点
+		var locationArr = $centerLocation.split(',');
+		var center = new LatLng(locationArr[0],locationArr[1]);
+		//=====地图初始化
+		var map = new qq.maps.Map(document.getElementById('map-tencent'),{
+	        center: center,
+	        zoom: $defaultZoom, //缩放级别 4-17
+	        draggable: true,               //设置是否可以拖拽,默认true
+	        scrollwheel: true,             //设置是否可以滚动,默认true
+	        disableDoubleClickZoom: true    //设置是否可以双击放大,默认true
+	    });
+	    //=====地图点击事件
+	    /*
+		var mapclickListener = Event.addListener(map,'click',function(event) {
+			var nowZoom = map.getZoom();
+	        alert('您点击了地图,位置为:[' + event.latLng.getLng() +',' + event.latLng.getLat() + ']'+'\n当前地图缩放级别：'+nowZoom);
+		});
+		//Event.removeListener(mapclickListener); //移除click 事件
+		*/
+		//=====控件xx
+		/*
+		var zoomLevelControl = new qq.maps.Control({
+	        content: '缩放级别:' + map.getZoom(),
+	        align: qq.maps.ALIGN.TOP,
+	        map: map
+	    });
+	    */
+
+	   
+
+
+		///////////////////////////////////*JQuery*/////////////////////////////////////
+		$(function(){
+
+			/*+------------------------------+*/
+			//=====坐标json
+			/*
+			* 字段说明：
+			* title 坐标名称(可缺省)
+			* details 坐标详细信息(如位置、电话、联系人等)(可缺省)
+			* isShowAtonce 是否地图一加载就马上显示坐标详细信息，即信息窗口(必须). 1 是, 0 否(点击标注点或鼠标移动到标注点时才显示)
+			* isShowInfoClose 是否显示信息窗的关闭按钮（打叉图标），默认true
+			* color 坐标名称颜色,默认白色(可缺省)
+			* bgcolor 坐标名称背景色,默认橙色(可缺省)
+			* draggable 标注点是否可拖拽/移动(可缺省)，默认false
+			* animation 标注点动画(跳动的标记)(可缺省). 默认false。 当为其它值时表示开启动画，其它值：BOUNCE 反复弹跳, DROP 从天而降，DOWN 落下, UP 升起
+			*/
+			var $locateJson = {
+				"data":[
+					{"title":"关帝庙", "location":"24.901463,118.593206", "details":"泉州关帝庙位于津淮街，很受大众欢迎！", "isShowAtonce":"1", "isShowInfoClose":true, color:"#fff", bgcolor:"#f25824", draggable:false, animation:false},
+					{"title":"金帝大厦", "location":"24.898971,118.604364", "details":"福建省泉州市丰泽区田安北路172号", "isShowAtonce":"1", "isShowInfoClose":true, color:"#fff", bgcolor:"#0ce", draggable:true, animation:'BOUNCE'},
+					{"title":"大洋百货", "location":"24.894378,118.595438", "details":"福建省泉州市<br>丰泽区泉秀路862号", "isShowAtonce":"1", "isShowInfoClose":false, color:"#fff", bgcolor:"green"},
+					{"title":"", "location":"24.914385,118.606339", "details":"", "isShowAtonce":"0", color:"#fff", bgcolor:"#1296db"}
+				]
+			}
+
+			//=====初始化就显示地图
+			//createLocationList($locateJson); //调用函数创建坐标
+			//$('.bubbleInfo').parent().parent().css({'border':'1px solid blue'});
+
+
+			//=====点击按钮才显示地图（坐标(查看地图)按钮） 
+			$('#btn-location').on('click',function(){
+				$('.section-mask,.section-map').show();
+				//注意：要适当延迟，标注点信息窗才能完全显示
+				setTimeout(function(){
+					if(typeof createLocationList === 'function')
+						createLocationList($locateJson); //调用函数创建坐标
+				},500) //如果不行设置为1000毫秒
+			});
+
+
+
+			//=====隐藏弹出窗口
+			$('#map-close').on('click',function(){
+				$('.section-mask,.section-map').hide();
+			})
+
+
+			
+			/*+------------------------------+*/
+			//=====缩放级别小于N级时，清除地图上所有点，并重新加载点数据(!!!不起作用)
+			/*
+			qq.maps.event.addDomListener(map, "zoom_changed", update);
+			function update(){
+				var nowZoom = map.getZoom();
+				if(nowZoom<=14){
+
+					$locateJson = {
+						"data":[
+							{"title":"", "location":"24.901463,118.593206", "details":"泉州关帝庙位于津淮街，很受大众欢迎！", "isShowAtonce":"0", color:"",bgcolor:""},
+							{"title":"", "location":"24.898971,118.604364", "details":"福建省泉州市丰泽区田安北路172号", "isShowAtonce":"0", color:"", bgcolor:""},
+							{"title":"", "location":"24.894378,118.595438", "details":"福建省泉州市<br>丰泽区泉秀路862号", "isShowAtonce":"0", color:"", bgcolor:""},
+							{"title":"", "location":"24.914385,118.606339", "details":"", "isShowAtonce":"0", color:"", bgcolor:""}
+						]
+					}
+					createLocationList($locateJson);
+					//alert(2);
+				}
+			}
+			*/
+
+
+		}); //$(function(){})
+		
+	</script>
+</body>
+</html>

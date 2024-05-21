@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="网站名称">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>控件使用说明</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+</head>
+<body>
+    <pre>
+        //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
+        //                            控件使用说明
+        //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
+        meuiTextScroll 文字上下滚动自带翻页控件
+        作者：mufeng
+        Q Q : 1614644937
+        官网：https://github.com/yimobing/meuiTextScroll
+
+
+        //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
+        //                              控件调用方法
+        //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::://
+        第1步，引入控件所需的CSS、JS
+        &lt;link type="text/css" rel="stylesheet" href="assets/css/meui-textScroll.css"&gt;
+        &lt;script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.8.3/jquery.min.js"&gt;&lt;/script&gt;
+        &lt;script type="text/javascript" src="src/meui-textScroll.js"&gt;&lt;/script&gt;&lt;!--meui文字上下滚动--&gt;
+        
+
+        第2步，创建DOM节点
+            &lt;div id="scrollBox"&gt;&lt;/div&gt;
+
+        第3步，调用控件
+            $("#scrollBox").meuiTextScroll({
+                source: { //数据源
+                    [
+                        {"title":"东海太禾广场13号楼1918室222", "description":"用户张三发起了询价，询价对象1918室，价格135000元/月", "pubdate":"2020-12-15 14:32:21", "href":"http://www.xx.com"},
+                        {"title":"闻馨一品15号楼0908室222", "description":"用户张三发起了询价，询价对象1918室，价格135000元/月", "pubdate":"2020-12-15 14:32:21", "href":"http://www.xx.com"}
+                    ]
+                },
+                format: ["title", "description", "pubdate", "href"], //自定义数据源字段,数组格式(可选). 数组元素分别对应数据源字段：标题, 描述(可选), 发布时间(可选), 链接地址(可选)
+                caption: '询价单最新消息', //区块标题(可选)
+                width: 340, //滚动区域宽(可选)
+                height: 500, //滚动区域高(可选)
+                line: 1, //每次滚动的行数(可选)
+                speed: 500, //滚动速度(毫秒)(可选)
+                timer: 2000, //滚动间隔时间(毫秒)(可选)
+                direction: 'up', //滚动方向(可选). up 向上(默认), down 向下
+                pageBtn: true, //是否显示上下翻页按钮,默认true(可选)
+                up: "but_up", //向上按钮ID属性名称(可选)
+                down: "but_down" //向下按钮ID属性名称(可选)
+            })
+        
+          
+
+
+        </pre>
+
+
+</body>
+</html>

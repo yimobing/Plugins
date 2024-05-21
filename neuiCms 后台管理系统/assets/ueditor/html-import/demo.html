@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>html引入公用html</title>
+	<script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+	<script type="text/javascript" src="js/include.js"></script>
+</head>
+<body>
+	<style>
+	*{box-sizing: border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;}
+	#content{
+		width:100%;
+		padding:20px;
+		border:1px solid blue;
+		border-radius: 5px;
+	}
+	h1{	
+		font-weight:bold;
+		text-align: center;
+	}
+
+
+</style>
+<div id="wrap">
+	<div id="content">
+		<h1>演示静态页面引入公用html代码片段(Demo.html)</h1>
+		<h5>注：本方法，不使用iframe,object引用方式！</h5>
+		<h5>说明：必须在服务器上(或新建一个任何一门编程语言的虚拟机）（如 http://127.0.0.1/demo.html）打开本页面才起作用，若直接双击本页面在浏览器中打开则无效！</h5>
+		<h6>方法1，调用插件include.js，在本页面添加代码：“&lt;include src="footer.html"&gt;&lt;/include&gt;”</h6>
+		<h6>方法2：使用：$("#page1").load("footer.html"); </h6>
+		<p>注意：如果使用“&lt;include src="footer.html"&gt;&lt;/include&gt;”的方式引用入，则必须把被引入页面footer.html的css拷贝到引入页面demo.html，否则ie8及以下浏览器中被引入页面footer.html中的样式不起作用！</p>
+	</div>
+
+	<include src="footer.html"></include>
+
+	<div id="page1"></div>
+
+</div><!--/.end wrap-->
+
+
+
+<script type="text/javascript">
+	  //$("#page1").load("footer.html");
+</script>
+
+</body>
+</html>

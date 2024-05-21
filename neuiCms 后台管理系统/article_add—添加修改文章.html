@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="网站名称">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>添加文章</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link type="text/css" rel="stylesheet" href="assets/neatui/css/neatui.min.css"><!--前端框架-->
+    <link type="text/css" rel="stylesheet" href="assets/neatui/css/neatui-dialog.css"><!--对话框-->
+    <link type="text/css" rel="stylesheet" href="assets/neatui/css/neatui-calendar.css"><!--日历控件-->
+    <link type="text/css" rel="stylesheet" href="assets/neatui/css/neatui-backArticleAdd.css"><!--添加文章-->
+    <link type="images/x-icon" rel="shortcut icon" href="/favicon.ico">
+</head>
+<body>
+    <div class="wrap">
+        <div class="article">
+            <div class="article__form">
+                <div class="article__row">
+                    <div class="article__quarter half">
+                        <div class="article__must">*</div>
+                        <div class="article__l"><label>文章标题</label></div>
+                        <div class="article__r"><input type="text" id="title"></div>
+                    </div><!--/.article__quarter-->
+                </div><!--/.article__row-->
+                <div class="article__row">
+                    <div class="article__quarter half">
+                        <div class="article__l"><label for="">缩略图</label></div>
+                        <div class="article__r"><input type="text" id="litpic"></div>
+                        <!--<div class="article__cell"><input type="file" id="uploadPic">上传图片</input></div>-->
+                    </div><!--/.article__quarter-->
+                </div><!--/.article__row-->
+                <div class="article__row">
+                    <div class="article__quarter">
+                        <div class="article__l"><label>文章来源</label></div>
+                        <div class="article__r"><input type="text" id="source" value="本站"></div>
+                    </div><!--/.article__quarter-->
+                    <div class="article__quarter">
+                        <div class="article__l"><label>作者</label></div>
+                        <div class="article__r"><input type="text" id="writer" value="未知"></div>
+                    </div><!--/.article__quarter-->
+                </div><!--/.article__row-->
+                <div class="article__row">
+                    <div class="article__quarter">
+                        <div class="article__must">*</div>
+                        <div class="article__l"><label>所属栏目</label></div>
+                        <div class="article__r">
+                            <select name="release" id="category">
+                                <option value="0">——请选择——</option>
+                                <option value="1">房产司法拍卖信息</option>
+                                <option value="2">购房政策查询</option>
+                                <option value="3">信贷超市</option>
+                                <option value="4">理财产品严选</option>
+                            </select>
+                        </div>
+                    </div><!--/.article__quarter-->
+                    <div class="article__quarter">
+                        <div class="article__l"><label>浏览次数</label></div>
+                        <div class="article__r"><input type="text" id="click" value="1" data-type="integer"></div>
+                    </div><!--/.article__quarter-->
+                </div><!--/.article__row-->
+                <div class="article__row">
+                    <div class="article__quarter">
+                        <div class="article__l"><label>发布时间</label></div>
+                        <div class="article__r"><input type="text" id="sendDate" class="neDate" readonly></div>
+                    </div><!--/.article__quarter-->
+                    <div class="article__quarter">
+                        <div class="article__l"><label>修改时间</label></div>
+                        <div class="article__r"><input type="text" id="pubDate" class="neDate" readonly></div>
+                    </div><!--/.article__quarter-->
+                </div><!--/.article__row-->
+                <div class="article__row">
+                    <div class="article__quarter half">
+                        <div class="article__l"><label>关键词</label></div>
+                        <div class="article__r"><input type="text" id="keywords"></div>
+                    </div><!--/.article__quarter-->
+                </div><!--/.article__row-->
+                <div class="article__row">
+                    <div class="article__quarter half">
+                        <div class="article__l"><label>地区</label></div>
+                        <div class="article__r"><input type="text" id="area"></div>
+                    </div><!--/.article__quarter-->
+                </div><!--/.article__row-->
+                <div class="article__row">
+                    <div class="article__quarter half">
+                        <div class="article__l"><label>标签</label></div>
+                        <div class="article__r"><input type="text" id="tags"></div>
+                    </div><!--/.article__quarter-->
+                </div><!--/.article__row-->
+                <div class="article__row">
+                    <div class="article__quarter half">
+                        <div class="article__l"><label>内容摘要</label></div>
+                        <div class="article__r"><textarea id="description"></textarea></div>
+                    </div><!--/.article__quarter-->
+                </div><!--/.article__row-->
+                <div class="article__row half">
+                    <div class="article__quarter">
+                        <div class="article__l"><label>排序</label></div>
+                        <div class="article__r"><input type="text" id="order" value="100" data-type="integer"></div>
+                    </div><!--/.article__quarter-->
+                    <div class="article__quarter">
+                        <div class="article__must">*</div>
+                        <div class="article__l"><label>发布范围</label></div>
+                        <div class="article__r">
+                            <select name="release" id="release">
+                                <option value="0">——请选择——</option>
+                                <option value="1">手机</option>
+                            </select>
+                        </div><!--/.article__r-->
+                    </div><!--/.article__quarter-->
+                    <div class="article__quarter">
+                        <div class="article__l"><label>全平台发布</label></div>
+                        <div class="article__r">
+                            <input type="checkbox" id="inAllPlatForm">
+                        </div>
+                    </div><!--/.article__quarter-->
+                    <div class="article__quarter">
+                        <div class="article__l"><label>在首页显示</label></div>
+                        <div class="article__r">
+                            <input type="checkbox" id="inHome">
+                        </div>
+                    </div><!--/.article__quarter-->
+                </div><!--/.article__row-->
+                <div class="article__row">
+                    <div class="article__quarter half">
+                        <div class="article__l"><label>链接地址</label></div>
+                        <div class="article__r"><input type="text" id="outLink"></div>
+                    </div><!--/.article__quarter-->
+                </div><!--/.article__row-->
+                <div class="article__row article__row-link">
+                    <div class="article__quarter full">
+                        <div class="article__l"><label></label></div>
+                        <div class="article__r"><span class="statement">有填写链接地址，则“文章内容”可放空，打开文章时将自动跳转至指定URL。</span></div>
+                    </div><!--/.article__quarter-->
+                </div><!--/.article__row-->
+                <div class="article__row article__row-content">
+                    <div class="article__quarter full flex-start">
+                        <div class="article__must">*</div>
+                        <div class="article__l"><label>文章内容</label></div>
+                        <div class="article__r">
+                            <script id="content" type="text/plain" style="width: 100%; height: 500px;"></script>
+                        </div><!--/.article__r-->
+                    </div><!--/.article__quarter-->
+                </div><!--/.article__row-->
+            </div><!--/.article__form-->
+            <div class="article__operate">
+                <button type="button" id="btn-save">保存</button>
+                <!--<button type="button" id="btn-cancel">取消</button>-->
+            </div><!--/.article__operate-->
+        </div><!--/.article-->
+    </div><!--/.wrap-->
+
+
+    <!--================================================================================-->
+    <!--                            JAVASCRIPT                                          -->
+    <!--================================================================================-->
+    <script type="text/javascript" src="assets/libs/jquery-1.8.3.min.js"></script><!--JQ库-->
+    <script type="text/javascript" src="assets/neatui/js/neatui-calendar.js"></script><!--日历控件-->
+    <script type="text/javascript" src="assets/neatui/js/neatui.min.js"></script><!--前端框架-->
+    <script type="text/javascript" src="assets/neatui/js/neatui-dialog.js"></script><!--对话框-->
+    <script type="text/javascript" src="assets/neatui/js/neatui-ajax.js"></script><!--自定义AJAX-->
+    <script type="text/javascript" src="assets/neatui/js/neatui-functions.js"></script><!--函数库-->
+    <!--[================百度编辑器配置================]-->
+    <script type="text/javascript" src="assets/ueditor/ueditor.config.js" charset="utf-8"></script>
+    <script type="text/javascript" src="assets/ueditor/ueditor.all.js" charset="utf-8"></script>
+    <!--建议手动加载语言、避免在e下有时因为加载语言失败导致编辑器加载失败-->
+    <!--这里加载的语言会覆盖你在配置项目里添加的语言类型，比如你在配置项目里配置的是英文，这里加载的是中文，那最后就是中文-->
+    <script type="text/javascript" src="assets/ueditor/lang/zh-cn/zh-cn.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        /*+————————————————全局变量————————————————+*/
+        //——————————————————————————————————————————
+        // 接收URL参数 ajax({})
+        // var g_wz_bh = '<%=s_wz_bh%>'; // 文章编号. 空表示新增文章, 非空表示旧文章。ajax({})
+        var g_wz_bh = '1001'; // 文章编号. 空表示新增文章, 非空表示旧文章
+
+        //——————————————————————————————————————————
+        // 页面链接地址 ajax({})
+        var g_page_article_list = 'article_list—管理文章.html'; // 文章列表页
+
+
+
+        /*+————————————————FUNCTION————————————————+*/
+        /**
+         * 展示文章信息
+         * @param {object} ps_source 数据源
+         */
+        function displayArticleInfos(ps_source){
+            var json = ps_source;
+            if(!json || $.isEmptyObject(json)) return;
+            $('#title').val(json["title"]);
+            $('#litpic').val(json["img_url"]);
+            $('#source').val(json["wzly"]);
+            $('#writer').val(json["wzzz"]);
+            $('#category option:contains("' + json["sslm"] +'")').attr('selected', true);
+            $('#click').val(json["llcs"]);
+            $('#keywords').val(json["gjc1"]);
+            $('#area').val(json["gjc2"]);
+            $('#tags').val(json["gjc3"]);
+
+            $('#description').val(json["nrzy"]);
+            $('#content').html(utilities.htmlDecode(json["content"]));
+            $('#outLink').val(json["www_url"]);
+            $('#inHome').prop('checked', json["check_sy"] == '1' ? true : false);
+            $('#inAllPlatForm').prop('checked', json["check_qfb"] == '1' ? true : false);
+            $('#order').val(json["sxh"]);
+            $('#release option:contains("' + json["fbfw"] + '")').attr('selected', true);
+            $('#sendDate').val(json["create_time"]);
+            $('#pubDate').val(json["modify_time"]);
+        }
+
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        $(function(){
+
+            //——————————————————————————————————————————
+            //=====实例化百度编辑器
+            // 建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('编辑器区域的DIV ID属性值')就能拿到相关的实例
+            // var ue = UE.getEditor('content'); // 显示百度编辑器ueditor所有按钮
+            var ue = UE.getEditor('content', {
+                toolbars: [
+                    [
+                        'source', // 源代码
+                        'fontfamily', // 字体
+                        'fontsize', // 字号
+                        'paragraph', // 段落格式
+                        'customstyle', // 自定义标题
+                        'forecolor', // 字体颜色
+                        'backcolor', // 背景色
+
+                        'undo', // 撤销
+                        'redo', // 重做
+                        'bold', // 加粗
+                        'indent', // 首行缩进
+                        'snapscreen', // 截图
+                        'italic', // 斜体
+                        'underline', // 下划线
+                        'strikethrough', // 删除线
+                        'subscript', // 下标
+                        'fontborder', // 字符边框
+                        'superscript', // 上标
+
+                        'justifyleft', // 居左对齐
+                        'justifyright', // 居右对齐
+                        'justifycenter', // 居中对齐
+                        'justifyjustify', // 两端对齐
+                    
+                        'insertorderedlist', // 有序列表
+                        'insertunorderedlist', // 无序列表
+                        'lineheight', // 行间距
+                        'blockquote', // 引用
+                        'pasteplain', // 纯文本粘贴模式
+                        'selectall', // 全选
+                        'preview', // 预览
+                        'horizontal', // 分隔线
+                        'time', // 时间
+                        'date', // 日期
+                    
+                        'insertrow', // 前插入行
+                        'insertcol', // 前插入列
+                        'mergeright', // 右合并单元格
+                        'mergedown', // 下合并单元格
+                        'deleterow', // 删除行
+                        'deletecol', // 删除列
+                        'splittorows', // 拆分成行
+                        'splittocols', // 拆分成列
+                        'splittocells', // 完全拆分单元格
+                        'deletecaption', // 删除表格标题
+                        'inserttitle', // 插入标题
+                        'mergecells', // 合并多个单元格
+                        'deletetable', // 删除表格
+                        'cleardoc', // 清空文档
+                        'insertparagraphbeforetable', // "表格前插入行"
+
+                        'edittable', // 表格属性
+                        'edittd', // 单元格属性
+                        'link', // 超链接
+                        'unlink', // 取消链接
+                        'emotion', // 表情
+                        'spechars', // 特殊字符
+                        'searchreplace', // 查询替换
+                        'map', // Baidu地图
+                                    
+                        'fullscreen', // 全屏
+                        'directionalityltr', // 从左向右输入
+                        'directionalityrtl', // 从右向左输入
+                        'rowspacingtop', // 段前距
+                        'rowspacingbottom', // 段后距
+                                    
+                        'touppercase', // 字母大写
+                        'tolowercase', // 字母小写
+                        'template', // 模板
+                        'inserttable', // 插入表格
+                        'charts', //  图表
+                        'formatmatch', // 格式刷
+                        'removeformat', // 清除格式
+                        'edittip ', // 编辑提示
+                        'autotypeset' // 自动排版
+                                    
+                        // 'anchor', // 锚点
+                        // 'pagebreak', // 分页
+                        // 'insertframe', // 插入Iframe
+                        // 'imagenone', // 默认
+                        // 'imageleft', // 左浮动
+                        // 'imageright', // 右浮动
+                        // 'attachment', // 附件
+                        // 'imagecenter', // 居中
+                        // 'wordimage', // 图片转存
+                        // 'drafts', //  从草稿箱加载
+                        // 'webapp', // 百度应用
+                        // 'scrawl', // 涂鸦
+                        // 'background', // 背景
+                        // 'music', // 音乐
+                        // 'gmap', // Google地图
+                        // 'insertvideo', // 视频
+                        // 'help', // 帮助
+                        // 'insertcode', // 代码语言
+                        // 'simpleupload', // 单图上传
+                        // 'insertimage', // 多图上传
+                        // 'print', // 打印
+
+                    ]
+                ],
+                wordCount:true, // 是否开启字数统计
+                maximumWords:100000, // 允许的最大字符数
+                autoHeightEnabled: false, // 否自动长高,默认true
+                autoFloatEnabled: true
+            });
+
+
+
+
+            //——————————————————————————————————————————
+            //=====加载日历控件
+            $('.neDate').each(function(){
+                neuiCalendar.neDate($(this));
+            });
+
+
+
+
+
+            //——————————————————————————————————————————
+            //=====限制只能输入数字
+            $('[data-type="integer"]').on('input', function(){
+                var value = $(this).val();
+                value = restrict.onlyInterval(value);
+                $(this).val(value);
+            });
+
+
+
+
+
+            //——————————————————————————————————————————
+            //=====获取单篇文章数据
+            // 后台返回
+            var articleJson = '';
+            if(g_wz_bh.toString().replace(/([ ]+)/g, '') == ''){ // 新增文章
+                articleJson = { }
+            }else{ // 编辑旧文章
+                articleJson = { 
+                    "return":"ok", 
+                    "wz_bh":"1001", // 文章编号
+                    "title":"LPR利率下调后，上海多家银行首套房房贷利率降至4.8%", // 文章标题
+                    "img_url":"http://www.xxx.com/1.jpg", // 缩略图地址
+                    "wzly":"本站", // 文章来源
+                    "wzzz":"房小信", // 文章作者
+                    "sslm":"信贷超市", // 所属栏目
+                    "llcs":"105", // 浏览次数
+                    "gjc1":"购房利率下调,LPR下调", // 分类备注1(关键词)
+                    "gjc2":"丰泽区,鲤城区", // 分类备注2(地区)
+                    "gjc3":"首套房,LPR", // 分类备注3(标签)
+                    "nrzy":"上海房贷利率已经按照新的LPR利率下调，不过，距离下限4.25%仍有距离。今天，记者从沪上多家银行信贷人士处获悉，目前LPR利率下调已经在上海房贷市场落地，多家银行已经在原有利率基础上下调15个基点执行。", // 内容摘要
+                    "content":"&lt;p&gt;上海房贷利率已经按照新的LPR利率下调，不过，距离下限4.25%仍有距离。&lt;/p&gt;&lt;p&gt;今天，记者从沪上多家银行信贷人士处获悉，目前LPR利率下调已经在上海房贷市场落地，多家银行已经在原有利率基础上下调15个基点执行。&lt;/p&gt;&lt;p&gt;浦发银行信贷部门相关人士表示，目前其&lt;strong&gt;执行&lt;/strong&gt;的首套房和二套房利率分别为4.8%和5.5%，均比之前的4.95%和5.65%有所下调。&lt;/p&gt;", // 文章内容
+                    "www_url":"https://www.xxx.com", // 链接地址
+                    "check_sy":"1", // 是否在首页显示
+                    "check_qfb":"1", // 是否全平台发布
+                    "sxh":"100", // 顺序号
+                    "fbfw":"手机", // 发布范围
+                    "create_time":"2022-05-28", // 创建时间
+                    "modify_time":"2022-05-29" // 修改时间
+                }
+                /*
+                // START AJAX
+                var articleJson = {}
+                var isHoldOn = true;
+                ajax({
+                    heading: "获取单条文章数据",
+                    debug: false,
+                    async: false, // 取数方式. true 异步, false 同步(默认)
+                    type: "GET",
+                    dataType: "html",
+                    cache: false,
+                    url: "../fwh_pub/jk_pub.ashx",
+                    data: {
+                        "action": "sel_fjx_pub_news_one_pc",
+                        "user": "<%=s_user%>",
+                        "sjk": "<%=s_sjk%>",
+                        "wz_bh": g_wz_bh
+                    },
+                    success: function(res){
+                        if(toolTip.mistakeTips(res, this.url, this.heading, this.debug)) { isHoldOn = false; return; }
+                        // if(res == '') return;
+                        articleJson = JSON.parse(res);
+                    },
+                    error: function(res){
+                        if(toolTip.wrongTips(res, this.url, this.heading, this.debug)) { isHoldOn = false; return; }
+                    },
+                    beforeSend: function(XMLHttpRequest){ },
+                    complete: function(XMLHttpRequest, textStatus){ }
+                })
+                if(!isHoldOn){
+                    neui.destroyAnimate();
+                    // return;
+                }
+                // END AJAX
+                */
+                displayArticleInfos(articleJson);
+            }
+
+
+
+
+
+            //——————————————————————————————————————————
+            //=====保存按钮、提交文章按钮
+            $('#btn-save').on('click', function(){
+                var ls_wz_bh = g_wz_bh, // 文章编号
+                    ls_title = filter.html($('#title').val()), // 文章标题
+                    ls_img_url = filter.html($('#litpic').val()), // 缩略图
+                    ls_wzly = filter.html($('#source').val()), // 文章来源
+                    ls_wzzz = filter.html($('#writer').val()), // 文章作者
+                    ls_sslm = $('#category option:selected').text(), // 所属栏目
+                    ls_llcs = filter.html($('#click').val()), // 浏览次数
+                    ls_gjc1 = filter.html($('#keywords').val()), // 分类备注1(关键词)
+                    ls_gjc2 = filter.html($('#area').val()), // 分类备注2(地区)
+                    ls_gjc3 = filter.html($('#tags').val()), // 分类备注3(TAG标签)
+                    ls_nrzy = filter.html($('#description').val()), // 内容摘要
+                    ls_content = utilities.htmlEncode(ue.getContent()), // 文章内容
+                    ls_www_url = filter.html($('#outLink').val()), // 链接地址
+                    ls_check_sy = $('#inHome').prop('checked') ? 1 : 0, // 是否在首页显示
+                    ls_check_qfb = $('#inAllPlatForm').prop('checked') ? 1 : 0, // 是否全平台发布
+                    ls_sxh =  $('#order').val(), // 顺序号
+                    ls_fbfw = $('#release option:selected').text(), // 发布范围
+                    ls_create_time = $('#sendDate').val(), // 创建时间
+                    ls_modify_time = $('#pubDate').val(); // 修改时间
+                if(ls_nrzy.toString().replace(/([ ]+)/g, '') === ''){ // 如果文章摘要为空，则截取文章正文255个字作为摘要
+                    ls_nrzy = ls_content.substring(0, 255);
+                }
+                var arr = [ ls_wz_bh, ls_title, ls_img_url, ls_wzly, ls_wzzz, ls_sslm, ls_llcs, ls_gjc1, ls_gjc2, ls_gjc3, ls_nrzy, ls_www_url, ls_check_sy, ls_check_qfb, ls_sxh, ls_fbfw, ls_create_time, ls_modify_time, ls_content ]
+                // console.log('文章数组：', arr);
+
+                // 校验数据完整性
+                var tips = '';
+                $('.article .article__quarter').each(function(){
+                    console.log('aaa')
+                    var isMust = $(this).find('.article__must').length == 0 ? false : true,
+                        label = $(this).find('.article__l>label').text();
+                    var $input = $(this).children('.article__r').children();
+                        tagName = $input[0].tagName.toLocaleLowerCase();
+                        type = typeof $input.attr('type') == 'undefined' ? '' : $input.attr('type');
+                    var value = '';
+                    if(tagName == 'input' && type == 'text') value = $input.val(); // 单行输入框
+                    if(tagName == 'input' && type == 'checkbox') value = $input.prop('checked') ? 1 : 0; // checkbox类型
+                    if(tagName == 'textarea') value = $input.val(); // 多行输入框
+                    if(tagName == 'select') value = $input.children('option:selected').text().indexOf('选择') >= 0 ? '' : $input.children('option:selected').text(); // 下拉选择框
+                    if(tagName == 'div') value = ls_content; // 文章正文
+
+                    if(isMust && value.toString().replace(/([ ]+)/g, '') == ''){
+                        tips += label + '、';
+                    }  
+                });
+                if(tips != ''){
+                    neuiDialog.alert({
+                        zIndex: 999,
+                        message: '请填写：' + tips.substr(0, tips.length - 1),
+                        buttons: ['确定']
+                    })
+                    return;
+                }
+                
+                // 开始执行
+                neui.showAnimate();
+                setTimeout(function(){
+                    var flag = '', msg = '保存成功';
+                    // 后台返回
+                    
+                    if(ls_wz_bh.toString().replace(/([ ]+)/g, '') == ''){ // 1、新增的文章
+                        /*
+                        // START AJAX
+                        var isHoldOn = true;
+                        ajax({
+                            heading: "保存新增的文章",
+                            debug: false,
+                            async: false, // 取数方式. true 异步, false 同步(默认)
+                            type: "GET",
+                            dataType: "html",
+                            cache: false,
+                            url: "../fwh_pub/jk_pub.ashx",
+                            data: {
+                                "action": "ins_fjx_pub_news",
+                                "user": "<%=s_user%>",
+                                "sjk": "<%=s_sjk%>",
+                                "title": ls_title,
+                                "img_url": ls_img_url,
+                                "wzly": ls_wzly,
+                                "wzzz": ls_wzzz,
+                                "sslm": ls_sslm,
+                                "llcs": ls_llcs,
+                                "gjc1": ls_gjc1,
+                                "gjc2": ls_gjc2,
+                                "gjc3": ls_gjc3,
+                                "nrzy": ls_nrzy,
+                                "content": ls_content,
+                                "www_url": ls_www_url,
+                                "check_sy": ls_check_sy,
+                                "check_qfb": ls_check_qfb,
+                                "sxh": ls_sxh,
+                                "fbfw": ls_fbfw
+                            },
+                            success: function(res){
+                                if(toolTip.emptyTips(res, this.url, this.heading, this.debug)) { isHoldOn = false; return; }
+                                // if(res == '') return;
+                                var json = JSON.parse(res);
+                                flag = json.return == 'ok' ? 1 : 0;
+                                if(!flag) msg = json.data;
+                            },
+                            error: function(res){
+                                if(toolTip.wrongTips(res, this.url, this.heading, this.debug)) { isHoldOn = false; return; }
+                            },
+                            beforeSend: function(XMLHttpRequest){ },
+                            complete: function(XMLHttpRequest, textStatus){ }
+                        })
+                        if(!isHoldOn){
+                            neui.destroyAnimate();
+                            return;
+                        }
+                        // END AJAX
+                        */
+                    }
+
+                    else{ // 2、旧文章
+                        /*
+                        // START AJAX
+                        var isHoldOn = true;
+                        ajax({
+                            heading: "保存编辑过的文章",
+                            debug: false,
+                            async: false, // 取数方式. true 异步, false 同步(默认)
+                            type: "GET",
+                            dataType: "html",
+                            cache: false,
+                            url: "../fwh_pub/jk_pub.ashx",
+                            data: {
+                                "action": "upd_fjx_pub_news",
+                                "user": "<%=s_user%>",
+                                "sjk": "<%=s_sjk%>",
+                                "wz_bh": ls_wz_bh,
+                                "title": ls_title,
+                                "img_url": ls_img_url,
+                                "wzly": ls_wzly,
+                                "wzzz": ls_wzzz,
+                                "sslm": ls_sslm,
+                                "llcs": ls_llcs,
+                                "gjc1": ls_gjc1,
+                                "gjc2": ls_gjc2,
+                                "gjc3": ls_gjc3,
+                                "nrzy": ls_nrzy,
+                                "content": ls_content,
+                                "www_url": ls_www_url,
+                                "check_sy": ls_check_sy,
+                                "check_qfb": ls_check_qfb,
+                                "sxh": ls_sxh,
+                                "fbfw": ls_fbfw
+                            },
+                            success: function(res){
+                                if(toolTip.emptyTips(res, this.url, this.heading, this.debug)) { isHoldOn = false; return; }
+                                // if(res == '') return;
+                                var json = JSON.parse(res);
+                                flag = json.return == 'ok' ? 1 : 0;
+                                if(!flag) msg = json.data;
+                            },
+                            error: function(res){
+                                if(toolTip.wrongTips(res, this.url, this.heading, this.debug)) { isHoldOn = false; return; }
+                            },
+                            beforeSend: function(XMLHttpRequest){ },
+                            complete: function(XMLHttpRequest, textStatus){ }
+                        })
+                        if(!isHoldOn){
+                            neui.destroyAnimate();
+                            return;
+                        }
+                        // END AJAX
+                        */
+                    }
+                    
+                    flag = parseInt(1); // 1 成功, 0 失败
+                    if(!flag) msg = '保存失败';
+
+                    neuiDialog.alert({
+                        zIndex: 999,
+                        message: msg,
+                        buttons: ['确定'],
+                        callBack: function(){
+                            if(flag){ // 成功
+                                window.location.href = g_page_article_list;
+                            }
+                        }
+                    })
+
+                    neui.destroyAnimate();
+                }, 100)
+            });
+
+
+
+        }); //$(function(){});
+    </script>
+
+
+</body>
+</html>

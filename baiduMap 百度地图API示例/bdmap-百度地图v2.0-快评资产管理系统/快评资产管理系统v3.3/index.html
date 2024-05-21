@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<title>百度地图API示例</title>
+	<link type="text/css" rel="stylesheet" href="css/bdmapStyle.css">
+	<style type="text/css">
+		body, html{width: 100%;height: 100%;margin:0;font-family:"微软雅黑";}
+		#allmap{height:100%;width:100%;}
+		#r-result{width:100%;}
+	</style>
+</head>
+<body>
+	<section class="section-bdmap">
+		<div class="map-search">
+			<div style="display: none">
+				<div class="one">
+					<input type="text" id="s_i_map" placeholder="资产名称" onFocus="this.placeholder=''" onBlur="this.placeholder='坐标名称'">
+					<button type="button" id="btn_search_map">搜索</button></div>
+				<div class="one">
+					<label>默认坐标</label>
+					<input type="text" id="s_i_zuobiao" readonly="readonly" disabled="disabled" placeholder="点击地图某处作为默认坐标" onFocus="this.placeholder=''" onBlur="this.placeholder='点击地图某处作为默认坐标'">
+					<button type="button" id="btn_defaultPoint">设为默认位置</button>
+				</div>
+				<div class="one">
+					<input type="checkbox" id="c_details"><label class="option">详细信息</label>
+				</div>
+				<div class="one">
+					<input type="checkbox" id="c_summary"><label class="option">汇总信息</label>
+				</div>
+			</div><!--/-->
+			<div class="one">
+				<label class="option">历史年份</label>
+				<select id="select_property"></select>年
+				<button type="button" id="btn_query_map">查询</button></div>
+			</div>
+		</div><!--/map-search-->
+	</section><!--/map-bdmap-->
+
+	<section id="allmap"></section><!--百度地图展示区域-->
+
+	<section class="section-demo">
+		<div class="panel-title">
+			<h1>百度地图API示例</h1>
+			<p>API参考：http://lbsyun.baidu.com/index.php?title=jspopular</p>
+			<p>坐标拾取/经纬度获取：http://api.map.baidu.com/lbsapi/getpoint/index.html</p>
+		</div>
+	</section><!--/section-demo-->
+</body>
+</html>
+
+
+<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2COzFaICuIyVj7V3VetKfmdRVnX8BhVr"></script><!--百度地图api-->
+<script type="text/javascript" src="http://api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+<!--<script type="text/javascript" src="http://api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>-->
+<script type="text/javascript" src="js/jquery.markerClusterer.js"></script><!--add 20182013-1-->
+<script type="text/javascript" src="js/jquery.bdmap.js"></script><!--百度地图API模块化成函数供前台调用-->
+<script type="text/javascript" src="js/bdmapQzArea.js"></script><!--百度地图API-划分行政区域-->
+<script type="text/javascript">
+
+	/*+-------------全局变量-------------------+*/
+	var $imgDir = 'img/'; //默认图片目录
+	var $yjzc_zb = "118.611836,24.918225"; //默认坐标
+	var $copyright = "快评资产管理系统版权所有 Version 2.0"; //版权信息（给伟助）
+	var $defaultZoom = 5; //默认地图缩放级别(3-19).若要显示到市中心,建议值15;显示到省,建议值5
+
+	var $openDotGather = false; //是否开启点聚合效果,值:true|false, 默认false
+	var $openDotSmall = true; //是否开启地图缩放到一定级别时以小点形式展示坐标,值:true|false, 默认false
+
+	var $coordinateJson = {} //所有坐标json
+
+	/*+------------地图初始化--------------------+*/
+	var map = new BMap.Map("allmap"); //allmap为加载地图区域的ID
+	BDMapInit(map,{"isNumc":1,"city":"泉州","point":$yjzc_zb,"zoom":$defaultZoom,"copyright":$copyright}); //edit 20181023-1
+  	
+	
+	
+	
+	/*+--------------------------------+*/
+	var $showOverlaysZoom = 17; //地图缩放级别几级时才显示标注点(覆盖物) //edit 20181026-1 20181026-2 
+	var $nowZoom = map.getZoom(); //当前地图缩放级别
+	var mapStyle={  style : "googlelite" }  
+	map.setMapStyle(mapStyle); //个性化地图（精简风格）若不设置,地图上将出现道路、风景、建筑等多余的覆盖物
+	var markers=[];
+
+	//edit 20181229-2(是否开启点聚合)
+	var markerClusterer = "";
+	if($openDotGather){
+		markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers}); //点聚合 
+	}
+	
+	
+	/*+--------------------------------+*/
+	/**
+	* 是否勾选详情信息. 值: true 已勾选, false 未勾选 add 20181023-1
+	*/
+	function isCheckedDetails(){
+		var showDetails = false;
+		var boolean = $('#c_details').prop("checked") ? true : false;
+		return boolean;
+	}
+
+	/**
+	* 函数：创建年份
+	*/
+	function createYearSelect(){
+		var _html = '';
+		var date = new Date();
+		var nowYear = date.getFullYear(); //当前年份，eg.2018
+		var startYear = 1998;
+		var j = -1;
+		for(var i=nowYear;i>=startYear;i--){
+			j++;
+			_html += '<option value="'+j+'">'+i+'</option>';
+		}
+		$('#select_property').empty().append(_html);
+
+	}
+
+	/*+--------------------------------+*/
+	/**
+	* 函数：加载坐标json数据 
+	* @param dataJson <=> json数据
+	* 字段： 
+	* "坐标" 坐标经纬度; "显示名称" 坐标名称; "数据类型"; "数据编号";  "城市编号";
+	* detail 坐标详细信息; color 坐标颜色(可缺省),值1、2、3
+	* @param paramJson <=> 其它参数json <=> {"showDetails":true|false, "isShowLocate":true|false}
+	* showDetails是否显示详细信息; isShowLocate 是否直接显示坐标信息(而不显示小点)(默认false)
+	*/
+	function loadPointData(dataJson,paramJson){
+	  	map.clearOverlays();  //一次移除所有的覆盖物(相当于清空所有标注点)(必须!)
+
+	  	//edit 20181229-2(是否开启点聚合)
+	  	if($openDotGather){
+	  		markerClusterer.clearMarkers(markers); //清除点聚合(以前的)
+	  	}
+
+		markers = []; //清除数组数据 
+		for(var i=0;i<dataJson.data.length;i++){
+			var $json = dataJson.data[i];
+			var title = $json["显示名称"], //文本
+				dataType = $json["数据类型"], //数据类型
+				dataNo = $json["数据编号"], //数据编号
+				cityNo = $json["城市编号"], //城市编号
+				locate = $json["坐标"], //坐标
+				description = $json.detail, //描述
+				color = $json.color, //颜色
+				zuobiao = $json["坐标"].split(','),
+				l_point = zuobiao[0], //经度
+				r_point = zuobiao[1]; //纬度
+			var	img = '', //标注点图标
+				style = ''; //标注点样式,使用英文颜色（eg.red）或颜色值（eg.'#1296db')
+			var isShowLocate  = typeof(paramJson.isShowLocate)=='undefined' ? false : paramJson.isShowLocate;
+			//当地图级别达到设定的级别时，才显示具体标注物信息，否则只显示小圆点
+			if($nowZoom>=$showOverlaysZoom || ($nowZoom<$showOverlaysZoom&&isShowLocate) ){
+				if(color=='1'){
+					img = 'icon_locate_red.png';
+					style = "red";
+				}
+				if(color=='2'){
+					img = 'icon_locate_blue.png';
+					style = "blue";
+				}
+				if(color=='3'){
+					img = 'icon_locate_green.png';
+					style = "green";
+				}
+			}else{
+				title = '';
+				img = 'icon_dot_blue.png';  
+			}
+	
+			if(img!='') img = $imgDir+img;
+			
+			//创建标注点
+			var $pointJson = {"l_point":l_point,"r_point":r_point,"title":title, "dataType":dataType, "dataNo":dataNo, "cityNo":cityNo, "locate":locate, "description":description,"style":style,"icon":img}
+
+			createMapPoint($pointJson,paramJson);
+			//console.log($pointJson);
+		}
+		
+		if($openDotGather){ //edit 20181229-2(是否开启点聚合)
+			markerClusterer.addMarkers(markers); //添加点聚合
+		}
+		
+	}
+
+
+
+
+	/*+-------------20181229-1-------------------+*/
+	/**
+	* 函数：获取百度地图Bounds的四个角(待后期优化调用)
+	*/
+	function getBounds(){
+		$nowZoom = map.getZoom(); //获取当前地图缩放级别
+		var bounds = map.getBounds(); //返回地图可视区域，以地理坐标表示
+		var ce = bounds.getCenter(); //获取矩形的中心点
+		var sw = bounds.getSouthWest();//获取西南角的经纬度(左下端点)
+		var ne = bounds.getNorthEast(); //获取东北角的经纬度(右上端点)
+		var wn = new BMap.Point(sw.lng, ne.lat); //获取西北角的经纬度(左上端点)
+		var es = new BMap.Point(ne.lng, sw.lat); //获取东南角的经纬度(右下端点)
+		console.log('返回矩形的中心点:',ce);
+		console.log('返回矩形的西南角：',sw);
+		console.log('返回矩形的东北角：',ne);
+		console.log('返回矩形的西北角:',wn);
+		console.log('返回矩形的东南角:',es);
+
+		//获取经纬度在这四个端点之间的坐标json
+		$coordinateJson = {
+			data:[
+				{"坐标":'118.618592,24.908369',"显示名称":'泉州国税局大厦',detail:'泉州市丰泽区丰泽街中段',color:'1'},
+				{"坐标":'118.613382,24.915539',"显示名称":'北峰万科城',detail:'<em class="bdtitle" id="abc">北峰万科城</em><em class="bdaddress">泉州市丰泽区北峰池峰路13号</em><br>共4栋15单元,合计12365平米<br>在租15单元,9996.66平米,66.55%<br>在押12单元,1258.88平米,88.55%<br>在评8单元,962.33平米,33.33%',color:'1'}
+			]
+		}
+		loadPointData($coordinateJson, { "showDetails": false });
+	}
+
+
+	/*+---------------20181229-1------------------+*/
+	/**
+	* 函数：鼠标滚动\鼠标点击\地图缩放事件公用函数
+	*/
+	function mouseScrollEvent(){
+		//getBounds();
+	    $nowZoom = map.getZoom(); //获取当前地图缩放级别
+	    setTimeout(function () {
+		    var showDetails = false;
+		    if( $nowZoom == $showOverlaysZoom ) { //x=16
+				console.log('地图缩放级别:',$nowZoom,'--显示标注信息');
+				showDetails = $nowZoom >= $showOverlaysZoom ? isCheckedDetails() : false;
+				loadPointData($coordinateJson, { "showDetails": showDetails});
+		    } else if( $nowZoom == ($showOverlaysZoom-1) ) { //x=15
+			    console.log('地图缩放级别:',$nowZoom,'--只显示小点!');
+			    loadPointData($coordinateJson, { "showDetails": false });
+		    }
+			//显示当前市管理的区县行政区划
+		    //if($nowZoom>6 && $nowZoom<12)
+		    if ($nowZoom>=8 && $nowZoom<=10){
+		    	//getCountyBoundary(); //调用泉州市区县行政区划
+		    }else{	
+		    	if($openDotGather){ //edit 20181229-2(是否开启点聚合)
+					map.clearOverlays();  //移除覆盖物
+				}
+		    }		
+	    }, 100)
+	}
+
+
+	/**
+	* 函数：坐标点击事件(给伟助)
+	* @param json 格式：{title:"", dataType:"", dataNo:"", cityNo:"", locate:""}
+	*/
+	function clickPointFunc(json){
+
+		//console.log('当前json参数:',json);
+		var title = json.title, 
+			dataType = json.dataType,
+			dataNo = json.dataNo,
+			cityNo = json.cityNo,
+			locate = json.locate,
+			longitude = locate.split(',')[0],
+			latitude = locate.split(',')[1];
+
+		var year = $('#select_property option:selected').text(); //选中的年份
+		console.log('点击坐标点<=>坐标名称:',title,' 数据类型:',dataType, ' 数据编号:',dataNo, ' 城市编号:',cityNo, "坐标:",locate, '经度：',longitude, '纬度：',latitude,' 年份：',year);
+
+		var showDetails = false;
+		if($('#c_details').prop("checked")) showDetails = true; //选中时
+		else showDetails = false; //取消选中时
+
+		var zoom = ''; //地图缩放级别
+		var zuobiao = ''; //中心点坐标
+
+		//...返回json
+		if(dataType=='市数据'){
+
+			//返回区县json
+			$coordinateJson = {
+				"地图显示级别":"10","中心坐标":"118.620731,24.896019",
+				data:[
+					{"坐标":'118.620731,24.896019',"显示名称":'丰泽区', "数据类型":"县数据", "数据编号":"01", "城市编号":"0595", detail:'',color:'1'},
+					{"坐标":'118.59521,24.914403',"显示名称":'鲤城区', "数据类型":"县数据", "数据编号":"02", "城市编号":"0595", detail:'',color:'2'},
+					{"坐标":'118.677414,24.947261',"显示名称":'洛江区', "数据类型":"县数据", "数据编号":"03", "城市编号":"0595", detail:'',color:'3'},
+					{"坐标":'118.92416,25.140697',"显示名称":'泉港区', "数据类型":"县数据", "数据编号":"04", "城市编号":"0595", detail:'',color:'1'},
+					{"坐标":'118.753852,24.905503',"显示名称":'台商投资区', "数据类型":"县数据", "数据编号":"05", "城市编号":"0595", detail:'',color:'2'},
+					{"坐标":'118.753852,24.905503',"显示名称":'晋江市', "数据类型":"县数据", "数据编号":"06", "城市编号":"0595", detail:'',color:'3'},
+					{"坐标":'118.669392,24.735326',"显示名称":'石狮市', "数据类型":"县数据", "数据编号":"07", "城市编号":"0595", detail:'',color:'1'},
+					{"坐标":'118.387971,24.964791',"显示名称":'南安市', "数据类型":"县数据", "数据编号":"08", "城市编号":"0595", detail:'',color:'2'},		
+					{"坐标":'118.889656,24.91222',"显示名称":'惠安县', "数据类型":"县数据", "数据编号":"09", "城市编号":"0595", detail:'',color:'3'},
+					{"坐标":'118.889656,24.91222',"显示名称":'安溪县', "数据类型":"县数据", "数据编号":"10", "城市编号":"0595", detail:'',color:'1'},
+					{"坐标":'118.285537,25.32902',"显示名称":'永春县', "数据类型":"县数据", "数据编号":"11", "城市编号":"0595", detail:'',color:'2'},
+					{"坐标":'118.246972,25.497308',"显示名称":'德化县', "数据类型":"县数据", "数据编号":"12", "城市编号":"0595", detail:'',color:'3'}
+				]
+			}	
+	
+		}else if(dataType=='县数据'){
+		
+			//返回楼盘json
+			$coordinateJson = {
+				"地图显示级别":"14","中心坐标":"118.618592,24.908369",
+				data:[
+					{"坐标":'118.618592,24.908369',"数据类型":"楼盘数据", "数据编号":"01", "城市编号":"0595"},
+					//{"坐标":'118.618592,24.908369',"显示名称":'泉州国税局大厦', "数据类型":"楼盘数据", "数据编号":"01", "城市编号":"0595", detail:'泉州市丰泽区丰泽街中段',color:''},
+					{"坐标":'118.613382,24.915539',"显示名称":'北峰万科城', "数据类型":"楼盘数据", "数据编号":"02", "城市编号":"0595", color:'1'},
+					//{"坐标":'118.613382,24.915539',"显示名称":'北峰万科城', "数据类型":"楼盘数据", "数据编号":"02", "城市编号":"0595", detail:'<em class="bdtitle">北峰万科城</em><em class="bdaddress">泉州市丰泽区北峰池峰路13号</em><br>共4栋15单元,合计12365平米<br>在租15单元,9996.66平米,66.55%<br>在押12单元,1258.88平米,88.55%<br>在评8单元,962.33平米,33.33%',color:'1'},
+					{"坐标":'118.614711,24.912884',"显示名称":'万科上悦城', "数据类型":"楼盘数据", "数据编号":"03", "城市编号":"0595", detail:'泉州市清濛经济技术开发区1号',color:'2'},
+					{"坐标":'118.60695,24.917538',"显示名称":'聚龙小镇', "数据类型":"楼盘数据", "数据编号":"04", "城市编号":"0595", detail:'泉州市惠安县惠南大道52号',color:'3'},
+					{"坐标":'118.605225,24.913474',"显示名称":'富临国际', "数据类型":"楼盘数据", "数据编号":"05", "城市编号":"0595", detail:'泉州市丰泽区丰泽街北段',color:'1'},
+					{"坐标":'118.618628,24.917439',"显示名称":'闻馨一品', "数据类型":"楼盘数据", "数据编号":"06", "城市编号":"0595", detail:'泉州市鲤城区南环路52号',color:'2'},
+					{"坐标":'118.613597,24.909279',"显示名称":'建发珑月湾', "数据类型":"楼盘数据", "数据编号":"07", "城市编号":"0595", detail:'泉州市江南产业园区25号',color:'3'}
+				]
+			}
+
+		} //ELSE
+
+		if(dataType!='楼盘数据'){ //最后一级数据就不再进行任何操作了
+
+			zoom = parseInt($coordinateJson["地图显示级别"]);
+			zuobiao = $coordinateJson["中心坐标"];
+			var point = new BMap.Point(zuobiao.split(',')[0],zuobiao.split(',')[1]);  
+			//map.setZoom(zoom); //设置地图缩放级别
+			//map.setCenter(point); //设置中心点
+			map.centerAndZoom(point,zoom); //设置地图中心点与缩放级别	
+			loadPointData($coordinateJson,{"showDetails":showDetails, "isShowLocate":true}); //根据json加载地图数据
+		}
+
+		
+	}
+
+	
+	
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*                                     分隔线                                                              *//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+$(function(){
+		
+		
+	/*+--------------------------------+*/
+	//=====设置地图区域高度(不然在服务器环境如.net地图可能不显示)
+	var winH = $(window).height();
+	$('#allmap').css('height',winH);
+
+	//=====创建历史年份
+	createYearSelect();
+	
+	
+	/*+--------------------------------+*/
+	/*
+	$coordinateJson = {
+		"地图显示级别":"5",
+		data:[
+			{"坐标":'117.991611,26.090682',"显示名称":'福建省', "数据类型":"省数据", "数据编号":"01", "城市编号":"05", detail:'福建省',color:'1'}
+		]
+	}
+	loadPointData($coordinateJson,{"showDetails":false,"isShowLocate":true}); //加载json数据
+	*/
+	
+	/*+--------------------------------+*/
+	//=====更改地图缩放级别开始时 (zoomend 结束时)
+	if($openDotSmall){ //edit 20181229-3(是否开启小点展示坐标)
+		map.addEventListener("zoomstart", function(evt){
+			mouseScrollEvent(); 
+		});
+	}
+
+	
+	/*+--------------------------------+*/
+	/**
+	*地图拖拽事件
+	*/
+	//map.addEventListener("dragstart", function(evt){  }); //拖拽动作开始时
+	//map.addEventListener("dragging", function(evt){ }); //拖拽过程中
+	//map.addEventListener("dragend", function(evt){　}); //拖拽结束时
+	//合起来写成如下:
+	/*
+	['dragstart','dragging','dragend'].forEach(function(item,index){
+	//map.addEventListener(item, mouseScrollEvent);
+		 console.log('正在拖拽中..');
+		 alert(2);
+	});
+	*/
+	if($openDotSmall){ //edit 20181229-3(是否开启小点展示坐标)
+		map.addEventListener("dragend", function(evt){
+			console.log('拖拽..');
+			mouseScrollEvent(); 
+		});
+	}
+	
+
+
+	
+	/*+--------------------------------+*/
+	//=====鼠标点击地图上某处时
+	map.addEventListener("click",function(e){
+		var l_point = e.point.lng,
+			r_point = e.point.lat,
+			coordinate = l_point+','+r_point; //当前坐标(经纬度)
+		//alert('当前坐标：'+coordinate);
+		assignValue2Element('s_i_zuobiao',coordinate); //把坐标赋值给某个元素
+	});
+	
+
+
+	/*+--------------------------------+*/
+	//=====绑定回车事件
+	$('#s_i_map').on('keydown',function(e){
+		if(e.keyCode==13){
+			$('#btn_search_map').click();
+		}
+
+	});
+
+	//=====按关键词检索
+	$('#btn_search_map').on('click',function(){
+		var keywords = $('#s_i_map').val(); //搜索关键词
+		//alert('当前搜索的关键词:'+keywords);
+		//百度默认的搜索方式
+		/*
+		var local = new BMap.LocalSearch(map, {
+			renderOptions:{map: map}
+		});
+		local.search(keywords); 
+		*/
+		//自定义搜索方式：返回单个坐标json
+		$coordinateJson = {
+			"地图显示级别":"16",
+			data:[
+				{"坐标":'118.618628,24.917439',"显示名称":'闻馨一品', "数据类型":"楼盘数据", "数据编号":"06", "城市编号":"0595", detail:'泉州市鲤城区南环路52号',color:'2'}
+			]
+		}
+		var zoom = parseInt($coordinateJson["地图显示级别"]);
+		map.setZoom(zoom); //设置地图缩放级别
+		loadPointData($coordinateJson,{"showDetails":false, "isShowLocate":true}); //加载地图数据
+
+	});
+
+
+
+	/*+--------------------------------+*/
+	//=====设为默认位置事件
+	$('#btn_defaultPoint').on("click",function(){
+		var point = $('#s_i_zuobiao').val(); //默认位置坐标
+		alert('默认位置坐标为：'+point);	
+	})
+
+
+	/*+--------------------------------+*/
+	//=====详细信息勾选事件
+	$('#c_details').on('change',function(){
+		var $this = $(this);
+		if($nowZoom>=$showOverlaysZoom){ // 当地图缩放级别达到设定的值时才显示详细信息
+			var showDetails = false;
+			if($this.prop("checked")) showDetails = true; //选中时
+			else showDetails = false; //取消选中时
+			loadPointData($coordinateJson,{"showDetails":showDetails}); //刷新地图数据
+		}
+	});
+
+
+	/*+--------------------------------+*/
+	//=====汇总信息勾选事件
+	$('#c_summary').on('change',function(){
+		var $this = $(this);
+		if($this.prop("checked")){
+			alert('已选中')
+		}else{
+			alert('取消选中')
+		}
+	});
+	
+
+
+	/*+--------------------------+*/
+	//=====查询事件、年份查询事件(给伟助)
+	$('#btn_query_map').on('click',function(){
+		onloadCityFunc();
+
+	});
+
+	onloadCityFunc();
+	//$('html,body').animate({scrollTop: 300}, 500);
+
+
+	function onloadCityFunc(){
+		var $this = $('#select_property');
+		var index = $this.get(0).selectedIndex, //选中的索引值
+			value = $('#select_property option:selected').val(), //选中的值
+			text = $('#select_property option:selected').text(); //选中的文本,即:年份
+		//alert('index: '+index+'\nvalue: '+value+'\ntext: '+text); 
+
+		var showDetails = false;
+		if($('#c_details').prop("checked")) showDetails = true; //选中时
+		else showDetails = false; //取消选中时
+
+		//返回城市json
+		$coordinateJson = {
+			"地图显示级别":"8","中心坐标":"117.021145,25.080173",
+			data:[
+				{"坐标":'119.307494,26.083025',"显示名称":'福州市', "数据类型":"市数据", "数据编号":"01", "城市编号":"0591", detail:'福州市',color:'1'},
+				{"坐标":'119.016246,25.462475',"显示名称":'莆田市', "数据类型":"市数据", "数据编号":"02", "城市编号":"0592", detail:'莆田市',color:'2'},
+				{"坐标":'119.55566,26.672758',"显示名称":'宁德市', "数据类型":"市数据", "数据编号":"03", "城市编号":"0593", detail:'宁德市',color:'3'},
+				{"坐标":'117.021145,25.080173',"显示名称":'龙岩市', "数据类型":"市数据", "数据编号":"04", "城市编号":"0594", detail:'龙岩市',color:'1'},
+				{"坐标":'117.021145,25.080173',"显示名称":'三明市', "数据类型":"市数据", "数据编号":"05", "城市编号":"0595", detail:'三明市',color:'2'},
+				{"坐标":'118.688768,24.881525',"显示名称":'泉州市', "数据类型":"市数据", "数据编号":"06", "城市编号":"0596", detail:'泉州市',color:'3'},
+				{"坐标":'118.09931,24.485934',"显示名称":'厦门市', "数据类型":"市数据", "数据编号":"07", "城市编号":"0597", detail:'厦门市',color:'1'},
+				{"坐标":'117.654154,24.51893',"显示名称":'漳州市', "数据类型":"市数据", "数据编号":"08", "城市编号":"0598", detail:'漳州市',color:'2'}
+			]
+		}
+
+		var zoom = parseInt($coordinateJson["地图显示级别"]);
+		var zuobiao = $coordinateJson["中心坐标"];
+		var point = new BMap.Point(zuobiao.split(',')[0],zuobiao.split(',')[1]);  
+		//map.setZoom(zoom); //设置地图缩放级别
+		//map.setCenter(point); //设置中心点
+		map.centerAndZoom(point,zoom); //设置地图中心点与缩放级别	
+		loadPointData($coordinateJson,{"showDetails":showDetails, "isShowLocate":true}); //根据json加载地图数据
+		
+
+		//!!!N毫秒后移动到指定坐标点(即让地图动一下,防止网页中有form标签时第一次打开地图会出现"定位不准确要动一下才准确"的bug)
+		setTimeout(function(){
+			map.panTo(new BMap.Point(118.618592,24.908369));   
+		}, 10);
+
+
+	}
+
+
+	
+
+
+	
+
+
+}); //END $(function(){});
+	
+</script>

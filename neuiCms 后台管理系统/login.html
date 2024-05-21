@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="format-detection" content="telephone=no,email=no,address=no">
+    <meta name="application-name" content="登录">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>登录</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link type="text/css" rel="stylesheet" href="assets/neatui/css/neatui-dialog.css">
+    <link type="text/css" rel="stylesheet" href="assets/neatui/css/neatui-login.css">
+    <!--<link type="images/x-icon" rel="shortcut icon" href="/favicon.ico">-->
+    <script type="text/javascript">if(top.location != self.location){ top.location = self.location; }</script>
+    <!--[if lt IE 9]>
+        <script type="text/javascript" src="assets/libs/html5shiv.min.js"></script>
+        <script type="text/javascript" src="assets/libs/respond.min.js"></script>
+        <script type="text/javascript" src="assets/libs/rem.min.js"></script>
+        <script type="text/javascript" src="assets/libs/json2.min.js"></script>
+    <![endif]-->
+</head>
+<body data-theme="modern">
+    <div class="wrap">
+        <header>
+            <div class="container">
+                <nav>
+                    <div class="nav-left">
+                        <div class="menu">
+                            <span class="menu-icon"></span><span class="menu-caption">菜单</span>
+                            <div class="submenu" style="display: none">
+                                <div class="submenu-caption">快捷菜单</div>
+                                <div class="submenu-list">
+                                    <li><a href="javascript:void(0);">关于我们</a></li>
+                                    <li><a href="javascript:void(0);">修改密码</a></li>
+                                    <li><a href="javascript:void(0);">修改资料</a></li>
+                                </div><!--/.submenu-list-->
+                            </div><!--/.submenu-->
+                        </div><!--/.menu-->
+                        
+                    </div><!--/.nav-left-->
+                    <div class="nav-right">
+                        <div class="nav-more">
+                            <ul>
+                                <li><a href="javascript:void(0);">XX官网</a></li>
+                                <li><a href="javascript:void(0);">人工服务</a></li>
+                            </ul>
+                        </div><!--/.nav-more-->
+                        <div class="nav-social">分享到</div>
+                    </div><!--/.nav-right-->
+                </nav>
+            </div><!--/.container-->
+        </header>
+
+        <main>
+            <div class="main-page"><div class="page-image"></div></div><!--/.main-page-->
+            <div class="main-bg"></div>
+            <div class="container">
+                <section class="panel-login">
+                    <div class="panel-login-child">
+                        <div class="module-logo">
+                            <div class="logo"><img src="src/img/cms-logo.png" alt=""></div>
+                        </div><!--/.module-logo-->
+                        <div class="module-webname">
+                            <span>房金信后台登录</span>
+                        </div><!--/.module-webname-->
+                        <div class="module-login">
+                            <div class="block-tab">
+                                <div class="tab-l on">密码登录</div>
+                                <div class="tab-r">扫码登录</div>
+                            </div><!--/.block-tab-->
+                            <div class="block-login">
+                                <div class="login-account login-tab1"><!--//账号登录-->                              
+                                    <div class="box-form">
+                                        <div class="form-one">
+                                            <div class="label"><label>用户名</label></div>
+                                            <div class="input"><i class="fa fa-user"></i><input type="text" id="i_username" runat="server"></div>
+                                        </div>
+                                        <div class="form-one">
+                                            <div class="label"><label>密码</label></div>
+                                            <div class="input"><i class="fa fa-password"></i><input type="password" id="i_password" runat="server"></div>
+                                        </div>
+                                    </div><!--/.box-form-->
+                                    <div class="box-button">
+                                        <button type="button" id="btn_login">登录</button>
+                                        <button type="button" id="btn_reset">重置</button>
+                                        <!-- ASP.NET 按钮如下 -->
+                                        <!-- <asp:Button ID="btn_login" runat="server" Text="登录" OnClick="btn_login_Click" />
+                                        <asp:Button ID="btn_reset" runat="server" Text="重置" OnClick="btn_reset_Click" /> -->
+                                    </div><!--/.box-button-->
+                                </div><!--/.login-account-->
+                                <div class="login-weixin login-tab2" style="display: none"><!--//微信登录-->  
+                                    <div class="erweima">
+                                        <img id="qrcode" src="src/img/cms-login-erweima.png">
+                                    </div><!--/.erweima-->
+                                    <div class="refresh">
+                                        <button type="button" id="btn-refresh-ewm">刷新</button>
+                                    </div><!--/.refresh-->
+                                    <div class="description">
+                                        <div class="img"><i class="fa-scan"></i></div>
+                                        <div class="text">
+                                            <span>打开微信</span>
+                                            <span>扫一扫登录</span>
+                                        </div>
+                                    </div><!--/.description-->    
+                                </div><!--/.login-weixin--> 
+                            </div><!--/.block-login-->
+                            <div class="block-shortcut">
+                                <button type="button">创建账号</button>
+                                <button type="button">帮助</button>
+                            </div><!--/.block-shortcut-->
+                        </div><!--/.module-login-->
+                    </div><!--/.panel-login-child-->
+                </section><!--/.panel-login-->               
+            </div><!--/.container-->
+        </main>
+
+        <footer> 
+            <div class="container">
+                <section class="panel-extra">
+                    <div class="block-links">
+                        <ul>
+                            <li><a href="">关于我们</a></li>
+                            <li><a href="">联系我们</a></li>
+                            <li><a href="">问题反馈</a></li>
+                        </ul>
+                    </div><!--/.block-links-->
+                    <div class="block-copyright">
+                        <span>Copyright&copy;2006-2019.Mufeng All rights reserved. Mufeng版权所有</span>
+                    </div><!--/.block-copyright-->
+                </section><!--/.panel-extra-->
+            </div><!--/.container-->
+        </footer>
+    </div><!--/.wrap-->
+
+
+    <script type="text/javascript" src="assets/libs/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="assets/neatui/js/neaui-dialog.js"></script>
+    <script type="text/javascript">
+        
+        $(function(){
+
+            //=====选项卡切换
+            $('.block-tab>div').on('click',function(){
+                var index = $(this).index() + 1;
+                $(this).addClass('on').siblings().removeClass('on');
+                $('.login-tab' + index).show().siblings().hide();
+            });
+
+
+            //=====菜单下拉
+            $('.menu-icon').on('click',function(){
+                $('.submenu').slideToggle();
+            });
+
+
+            //======点击数字键盘及当前点击的元素以外的区域时隐藏菜单下拉
+             $(document).on('click', function(e) {
+                    if ($(e.target).closest('.menu').length != 0) return; //e.target.closest(selector).length==0 说明点击的不是元素selector区域,反之则是
+                     $('.submenu').slideUp('fast');
+                    //e.stopPropagation();
+             })
+
+            //=====登录按钮
+            $('#btn_login').on('click',function(){
+                var username = $('#i_username').val(),
+                    password = $('#i_password').val();
+                var tips = '';
+                if(username=='') tips += '用户名、';
+                if(password=='') tips += '密码、';
+                if(tips!=''){
+                    alert('请填写' + tips.substr(0,tips.length-1));
+                    return false;
+                }
+                //..开始登录操作
+				window.location.href = 'index.html';
+
+            });
+
+            //=====重置按钮
+            $('#btn_reset').on('click',function(){
+                $('#i_username,#i_password').val('');
+            });
+
+
+
+
+
+        });
+    </script>
+</body>
+</html>

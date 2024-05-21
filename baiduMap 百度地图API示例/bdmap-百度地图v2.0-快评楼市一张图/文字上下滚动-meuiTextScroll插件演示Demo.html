@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="网站名称">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>MEUI文字向上滚动带上下翻页按钮</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link type="text/css" rel="stylesheet" href="meui/css/meui-textScroll.css"><!--meui文字滚动-->
+    <!--<link type="images/x-icon" rel="shortcut icon" href="/favicon.ico">-->
+    <!--<script type="text/javascript">if(top.location != self.location){ top.location = self.location; }</script>-->
+    <!--[if lt IE 9]>
+        <script type="text/javascript" src="meui/js/html5.min.js"></script>
+        <script type="text/javascript" src="meui/js/respond.min.js"></script>
+        <script type="text/javascript" src="meui/js/rem.min.js"></script>
+        <script type="text/javascript" src="meui/js/json2.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+    <div class="scrollbox">
+        <div class="scrollCaption">询价单最新消息</div>
+        <div id="scrollDiv"></div>
+        <div class="scroltit">
+            <div class="updown" id="but_down">向上</div><div class="updown" id="but_up">向下</div>
+        </div>
+    </div>
+
+
+    <!--================================================================================-->
+    <!--                            JAVASCRIPT                                          -->
+    <!--================================================================================-->
+    <script type="text/javascript" src="meui/js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="meui/js/meui-textScroll.js"></script><!--meui文字滚动-->
+    <script type="text/javascript">
+        /*+-------------------全局变量---------------------+*/
+        var g_times = 10; //定时时间(秒)
+            
+
+
+        /*+----------------FUNCTION----------------+*/
+
+        /**
+        * 获取询价单最新消息数据
+        * returns {object} 返回消息数据
+        */
+        var count_msg = 0;
+        function get_data_message(){
+            count_msg++;
+            if(count_msg == 1)
+                var json = {
+                    data:[
+                        {"title":"东海太禾广场13号楼1918室", "shuoming":"东海太禾广场13号楼1918室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"闻馨一品15号楼0908室", "shuoming":"闻馨一品15号楼0908室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"城东星光耀广场20号楼2021室", "shuoming":"城东星光耀广场20号楼2021室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"星湖雅苑6号楼1705室", "shuoming":"星湖雅苑6号楼1705室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"万科上悦城7号楼1205室", "shuoming":"万科上悦城7号楼1205室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"}
+                    ]
+                }
+            else
+                var json = {
+                    data:[
+                        {"title":"东海太禾广场13号楼1918室222", "shuoming":"东海太禾广场13号楼1918室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"闻馨一品15号楼0908室222", "shuoming":"闻馨一品15号楼0908室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"城东星光耀广场20号楼2021室222", "shuoming":"城东星光耀广场20号楼2021室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"星湖雅苑6号楼1705室222", "shuoming":"星湖雅苑6号楼1705室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"万科上悦城7号楼1205室222", "shuoming":"万科上悦城7号楼1205室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"}
+                    ]
+                }
+
+            return json;
+        }
+
+
+        /**
+         * 创建询价单最新消息HTML
+         */
+        function createMessage(ps_source){
+            var node = '#scrollDiv';
+            var _html = '<ul>';
+            if(typeof ps_source.data == 'undefined') return;
+            if(ps_source.data != 0) $(node).parent().show();
+            else $(node).parent().hide();
+            $.each(ps_source.data, function(i, item){
+                _html += '<li>'+
+                            '<h3><a href="javascript:;" class="linktit">' + item["title"] + '</a></h3>'+
+                            '<span class="time">' + item["create_time"] + '</span>'+
+                            '<div>' + item["shuoming"] + '</div>'+
+                        '</li>';
+            })
+            _html += '</ul>';
+            if($(node).length > 0){
+                $(node).empty().append(_html);
+            }
+
+        }
+
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        $(function(){
+
+            var timer2;
+            clearInterval(timer2);
+            timer2 = setInterval((function target(){
+
+                var messageJson = get_data_message();
+                createMessage(messageJson);
+                $("#scrollDiv").meuiTextScroll({
+                    width: 340,
+                    height: 500,
+                    line: 1, //每次滚动的行数
+                    speed: 500, //滚动速度(毫秒)
+                    timer: 2000, //滚动间隔时间(毫秒)
+                    up: "but_up", //向上按钮ID属性名称
+                    down: "but_down" //向下按钮ID属性名称
+                })
+
+                return target;
+                
+            })(), g_times * 1000)
+        });
+    </script>
+</body>
+</html>

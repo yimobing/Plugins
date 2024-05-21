@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="application-name" content="快评">
+	<meta name="applicable-device" content="pc,mobile">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta http-equiv="Cache-Control" content="no-transform">
+	<meta http-equiv="Cache-Control" content="no-siteapp">
+	<title>文章管理</title>
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<link type="text/css" rel="stylesheet" href="assets/neatui/css/neatui.min.css"><!--前端框架-->
+	<link type="text/css" rel="stylesheet" href="assets/neatui/css/neatui-dialog.css"><!--对话框控件-->
+	<link type="text/css" rel="stylesheet" href="assets/neatui/css/neatui-searchbox.css" /><!--搜索框控件-->
+	<link type="text/css" rel="stylesheet" href="assets/neatui/css/neatui-liketable.css" /><!--类表格控件-->
+	<link type="text/css" rel="stylesheet" href="assets/font-awesome/css/font-awesome.min.css" /><!--图标库-->
+	<!--[if lt IE 9]>
+		<script type="text/javascript" src="assets/style/libs/html5shiv.min.js"></script>
+		<script type="text/javascript" src="assets/style/libs/respond.min.js"></script>
+		<script type="text/javascript" src="assets/style/libs/rem.min.js"></script>
+		<script type="text/javascript" src="assets/style/libs/json2.js"></script>
+	<![endif]-->
+	<!--json2.js支持IE8-以下版本json与字符串互转h函数:JSON.Stringify()、 JSON.Parse()-->
+	<!--防止被iframe嵌套-->
+	<!--<script type="text/javascript">if(top.location != self.location){ top.location = self.location; }</script>-->
+	<base target="_blank">
+</head>
+<body>
+	<style>
+		body{ font-size: 14px; overflow-y: hidden; }
+		.wrap{ padding: 10px 15px; }
+		/*+搜索区域+*/
+		.search{ position: relative; width: 98%; margin: 0 auto;  /*text-align: center;*/ }
+		/*操作区域*/
+		.operation{ margin-top: 10px; }
+		.operation button{ width: auto!important; min-width: 90px; margin-left: 10px; padding: 0 5px; }
+		.operation button:first-child{ margin-left: 0; }
+		.operation i.fa{ margin-right: 5px; font-size: 12px; }
+		/*列表区域*/
+		.history{ margin-top: 15px; }
+	</style>
+	<div class="wrap">
+		<main>
+			<section class="search"></section><!--/.search-->
+			<section class="operation">
+				<button type="button" class="ne-btn" id="btn-select-all"><i class="fa fa-check-square-o"></i>全选</button>
+				<button type="button" class="ne-btn" id="btn-select-reverse"><i class="fa fa-cube"></i>反选</button>
+				<button type="button" class="ne-btn" id="btn-select-none"><i class="fa fa-circle-o"></i>全不选</button>
+				<button type="button" class="ne-btn red" id="btn-delete-all"><i class="fa fa-save"></i>批量删除</button>
+				<button type="button" class="ne-btn green" id="btn-add-one"><i class="fa fa-plus"></i>新增文章</button>
+			</section>
+			<section class="history"></section><!--/.history-->
+		</main>
+	</div><!--/.wrap-->
+
+	<script type="text/javascript" src="assets/libs/jquery-1.8.3.min.js"></script><!--JQ库-->
+	<script type="text/javascript" src="assets/neatui/js/neatui.min.js"></script><!--前端框架-->
+	<script type="text/javascript" src="assets/neatui/js/neatui-dialog.js"></script><!--对话框控件-->
+	<script type="text/javascript" src="assets/neatui/js/neatui-searchbox.js"></script><!--搜索框控件-->
+	<script type="text/javascript" src="assets/neatui/js/neatui-liketable.js"></script><!--类表格控件-->
+	<script type="text/javascript" src="assets/neatui/js/neatui-functions.js"></script><!--函数库-->
+	<script type="text/javascript" src="assets/neatui/js/neatui-ajax.js"></script><!--自定义封装AJAX-->
+	<script type="text/javascript">
+		/*+-------------全局变量---------------+*/
+		//——————————————————————————————————————————
+		// 全局变量
+		var $rootNode = $('.history'); // 列表根节点
+		var $tableDom = ''; // 指定表格根节点(多张表格时必须指定,单张表格时可选). 请在创建表格的函数中进行赋值.
+
+ 		//——————————————————————————————————————————
+        // 搜索条件
+        var g_title = ''; // 文章标题
+        var g_sslm = ''; // 所属栏目
+
+		// 页面链接地址 ajax({})
+		var g_page_article_add = 'article_add—添加修改文章.html'; // 添加文章页面链接地址
+		var g_page_article_show = 'article_show—预览文章.html' ; // 预览文章页面链接地址
+
+		// 搜索框
+		var searchJson = {
+			putInHead:false, // 是否自动创建header标签,并把搜索区域放在该标签中,默认false.(可选)
+			inputBox:{ // 搜索框组
+				column:5, // 一行有几个，默认3
+				group:[{
+						title:"文章标题",
+						field:"title",
+						icon:"user-o",
+						// width:150, // 输入框宽
+						must:false // 是否必填,默认true
+					},{
+						title:"所属栏目",
+						field:"sslm",
+						icon:"list",
+						// width:130,
+						must: false
+					}
+				]
+			},
+			searchButton:{ // 按钮组
+				wrap: false, // 按钮组是否换行显示,默认true(可选)
+				compacted: true, // 按钮组是否紧接着搜索框组(即按钮组紧接在搜索框组后面，不换行),默认false(可选)
+				sticky: false, // 按钮组是否置顶,即是否置于搜索框组前面,默认false (可选).(仅当compacted=false时有效)
+				group:[ // 按钮组
+					{
+						title:"查询", 
+						field:"btn_query",
+						width:70,
+						callback:function(e1, e2){
+							// 查询按钮
+							// console.log("查询按钮，e值：",e1, '\ne2：', e2);
+							var ls_title = e1["title"].value,
+								ls_sslm = e1["sslm"].value;
+							var  arr = [ ls_title, ls_sslm ]
+							// console.log('数组：', arr)
+							// 全局赋值
+							g_title = ls_title;
+							g_sslm = ls_sslm;
+							// 重载数据
+							loadData();
+						}
+					}
+				]
+			}
+		}
+		$('.search').neuiSearchBox(searchJson);
+
+
+
+		//=====列表及分页
+		var g_pageSize = 30; // 每页几条记录
+		var g_setJson = { // 表格列字段配置
+			headHeight:50, // 表头高度. auto 自动(默认). 其它大于0的数字如：50 表示高50px. (可缺省)
+			headHasBgColor:true, // 表头是否有背景色(可缺省),默认true
+			tbodyHeight:"auto", // 自定义表格内容高度. auto 自动(默认). 其它大于0的数字如：300 表示高300px. (可缺省)
+			topHeight: "auto", // 表格以外上面部分高度(如header部分(可选). auto 自动(默认)，系统会自动计算表格距离顶部的距离; 其它大于0的数字如：150 表示高150px.
+			botHeight:"auto", // 表格以外下面部分高度（不含分页部分）(如footer部分).  auto 自动,即高度为0 (默认), 其它大于0的数字如：100 表示高100px. (可缺省)
+			isSerialCol:true, // 是否显示序号列. 默认true(可缺省)
+			isCheckboxCol:true, //是否选择列.  默认false（可选)
+			isSorted:true, // 是否启用列排序. 默认true.(可缺省)
+			isCeilLine:true, // 单元格是否有边线(可缺省),默认false
+			emptyDataTips:'抱歉，没有找到相应数据..', //无数据时的提示文(可选)
+			customize:{ //自定义属性(可缺省)
+				serialColumnWidth:45, // 序号列宽(可缺省),默认50
+				discoloration:true, // 是否隔行变色(可缺省),默认false
+				retainIllegalChar:false // 单元格内容是否保留非法字符(防止向数据库写入非法字符)(可缺省). true 是, false 否(默认). false时去掉所有html标签(但标签之间正常的字符会被留下)  true时会保留html标签,但标签会被转成字符串.
+			},
+			columns:[{
+					title:"文章ID",
+					field:"wz_bh",
+					mode:"span",
+					width:80,
+					display:"none",
+					unique:true, // 是否唯一值(该列在每一行的值是否唯一). true 是(即该列每一行的值都应该不同), false 否(默认)
+				},{
+					title:"文章标题",
+					field:"title",
+					mode:"span",
+					width:350
+				},{
+					title:"所属栏目",
+					field:"sslm",
+					mode:"span",
+					width:120
+				},{
+					title:"发布范围",
+					field:"fbfw",
+					mode:"span",
+					width:80
+				},{
+					title:"全平台发布？",
+					field:"check_qfb",
+                    mode:"radio[tick][circle][green]",
+					width:60
+				},{
+					title:"作者",
+					field:"wzzz",
+					mode:"span",
+					width:80
+				},{
+					title:"排序",
+					field:"sxh",
+					mode:"span",
+					width:60
+				},{
+					title:"浏览次数",
+					field:"llcs",
+					mode:"span",
+					width:80
+				},{ // add 20220601-1
+					title:"链接地址",
+					field:"www_url",
+					mode:"span",
+					width:80,
+					display:"none"
+				},{
+					title:"发布时间",
+					field:"create_time",
+					mode:"span",
+					width:130
+				},{
+					title:"修改时间",
+					field:"modify_time",
+					mode:"span",
+					width:130
+				},{
+					title:"操作", 
+					width:30,
+					mode:"button",
+					name:"btn-delete",
+					align:"center",
+					fontColor:"blue",
+					label:"预览文章",
+					b_icon:"search-plus",
+					b_onlyImage:true,
+						merge:{ // 一级表头合并(可选)
+						direction:"next", // 合并方向(可选). next 向下合并(默认), prev 向上合并
+						numeral:3 // 合并的列数(可选)
+					},
+					callBack:function(e){
+						viewOneRow(e);
+					}
+				},{
+					title:"操作", 
+					width:30,
+					mode:"button",
+					name:"btn-edit",
+					align:"center",
+					fontColor:"green",
+					label:"修改文章",
+					b_icon:"pencil",
+					b_onlyImage:true,
+					callBack:function(e){
+						editOneRow(e);
+					}
+				},{
+					title:"操作", 
+					width:30,
+					mode:"button",
+					name:"btn-delete",
+					align:"center",
+					fontColor:"red",
+					label:"删除文章",
+					b_icon:"trash",
+					b_onlyImage:true,
+					callBack:function(e){
+						deleteOneRow(e);
+					}
+				}
+			]
+		}
+
+	
+		
+		
+
+		/*+-------------FUNCTION---------------+*/
+		/**
+		 * 函数：加载数据 edit 20211030-1
+		 * @param {object} options 参数
+		 */
+		 function loadData(options){
+			var defaults = {
+				resetOrder: false // 是否重置序号,默认false
+			}
+			var settings = $.extend(true, {}, defaults, options || {});
+			if(settings.resetOrder){ // 重置序号
+				$.privateProperty.pageCurpage['history'] = 1;
+			}
+			neui.showAnimate();
+			setTimeout(function(){
+				var source = get_data_list(1); 
+				var pages = get_data_pages();
+				createTableList(source, pages);
+				neui.destroyAnimate();
+			}, 100)
+		}
+
+	
+
+		/**
+		* 函数：创建列表及分页
+		* @param {object} dataJson 列表数据源
+		* @param {number} pageCount 分页总页数
+		*/
+		function createTableList(dataJson, pageCount){
+			$rootNode.neuiLikeTable({
+				setJson: g_setJson, // 列字段配置json
+				dataJson: dataJson, // 表格数据json
+				pagination: {
+					enable: true, // 是否启用分页
+					pageMode: 'select', // 分页方式（可缺省）。list 数字列表形式（默认），select 选择形式
+					pageSize: g_pageSize, // 每页几条记录，默认25（可缺省）
+					pageCount: pageCount, // 总页数
+					recordCount: '', // 总记录数(可选), 默认空(此时界面不显示总记录数)
+					pageSelect:{ //pageMode='select'时(可缺省)
+						allPage: false, // 全部按钮（即：通过此按钮可一次性加载全部数据）(可缺省)
+						homePage: true, // 首页按钮(可缺省)
+						prevPage: true, // 上一页按钮(可缺省)
+						nextPage: true, // 下一页按钮(可缺省)
+						lastPage: true, // 最后一页（尾页）按钮(可缺省)
+						dropPage: true // 下拉页码（一页页显示）按钮(可缺省)
+					},
+					callback:function(e){ // 回调函数（必须）.参数e格式: {curpage:1, pagesize:20, pageCount:3}
+						// console.log('回调信息，e：',e);
+						// var curpage = e.curpage;  // 当前页码
+						g_pageSize = e.pagesize; // 全局赋值
+						var json = get_data_list(e.curpage);
+						return json;
+					}
+				},
+				exportExcel: { // 导出EXCEL
+					enable: false, // 是否启用
+					filename:'文章管理', // 文件名
+					fileAutoTime: true, // 导出的文件自动添加时间(hh:mm:ss)作为文件名的一部分
+					extension: '.xls' // 拓展名。 .xls(excel 2003)(默认), .xlsx (excel 2007,2010)
+				}
+			})
+			$tableDom = $rootNode.find('.ne-like-table'); // 全局赋值
+
+			if($rootNode.is(':visible')) $('.operation').show();
+			else $rootNode.hide();
+		}
+
+
+
+		//========================================================
+		/**
+		 * 函数：获取分页总页数
+		 * @returns {Number} 返回页数
+		 */
+		function get_data_pages(){
+			var ls_every_page_count = g_pageSize;
+			var pages = 5;
+			/*
+			// START AJAX
+			var pages = 1;
+			var isHoldOn = true;
+			ajax({
+				heading: "获取分页总页码",
+				debug: false,
+				url: "../fwh_pub/jk_pub.ashx",
+				data: {
+					"action": "sel_fjx_pub_news_page_count",
+					"user": "<%=s_user %>",
+                    "sjk": "<%=s_sjk%>",
+					"every_page_count": ls_every_page_count, // 每页记录数
+					"title": g_title,
+					"sslm": g_sslm
+				},
+				success: function(res){
+					if(toolTip.emptyTips(res, this.url, this.heading, this.debug)) { isHoldOn = false; return; }
+					pages = res;
+				},
+				error: function(res){
+					if(toolTip.wrongTips(res, this.url, this.heading, this.debug)) { isHoldOn = false; return; }
+				},
+				beforeSend: function(XMLHttpRequest) { },
+				complete: function(XMLHttpRequest, textStatus) { }
+			})
+			if(!isHoldOn) {
+				neui.destroyAnimate();
+				return 1;
+			}
+			// END AJAX
+			*/
+			return utilities.isNaN(parseInt(pages)) ? 1 : parseInt(pages);
+		}
+
+
+
+		/**
+		 * 函数：获取列表数据
+		 * @param {string} ps_curpage 当前页码
+		 * @returns {object} 返回json数组
+		 */
+		 function get_data_list(ps_curpage){
+			var ls_open_page_num = typeof ps_curpage == 'undefined' ? 1 : ps_curpage;
+			var ls_every_page_count = g_pageSize;
+			// 后台返回
+			var listJson = {
+                "data":[    
+					{"wz_bh":"1001", "sxh":"100", "title":"1LPR利率下调后，上海多家银行首套房房贷利率降至4.8%", "sslm":"房产司法拍卖信息", "check_qfb":"1", "wzzz":"宋江", "llcs":"153", "fbfw":"手机", "www_url":"https://www.baidu.com", "create_time":"2022-05-13", "modify_time":"2022-12-05"},
+                    {"wz_bh":"1002", "sxh":"101", "title":"2LPR利率下调后，上海多家银行首套房房贷利率降至4.8%", "sslm":"房产司法拍卖信息", "check_qfb":"0", "wzzz":"宋江", "llcs":"180", "fbfw":"手机", "www_url":"", "create_time":"2022-05-13", "modify_time":"2022-12-05"},
+                    {"wz_bh":"1003", "sxh":"102", "title":"3LPR利率下调后，上海多家银行首套房房贷利率降至4.8%", "sslm":"房产司法拍卖信息", "check_qfb":"1", "wzzz":"宋江", "llcs":"236", "fbfw":"手机", "www_url":"", "create_time":"2022-05-13", "modify_time":"2022-12-05"},
+                    {"wz_bh":"1004", "sxh":"103", "title":"4LPR利率下调后，上海多家银行首套房房贷利率降至4.8%", "sslm":"房产司法拍卖信息", "check_qfb":"0", "wzzz":"宋江", "llcs":"497", "fbfw":"手机", "www_url":"", "create_time":"2022-05-13", "modify_time":"2022-12-05"}
+                ]
+			}
+
+
+			/*
+			// START AJAX
+			var listJson = {}
+			var isHoldOn = true;
+			ajax({
+				heading: "获取列表数据",
+				debug: false,
+				url: "../fwh_pub/jk_pub.ashx",
+				data: {
+					"action": "sel_fjx_pub_news_lssj",
+					"user": "<%=s_user %>",
+					"sjk": "<%=s_sjk%>",
+					"open_page_num": ls_open_page_num, //当前页码
+					"every_page_count": ls_every_page_count, //每页记录数
+					"title": g_title,
+					"sslm": g_sslm
+				},
+				success: function(res){
+					if(toolTip.emptyTips(res, this.url, this.heading, this.debug)) { isHoldOn = false; return; }
+					listJson = JSON.parse(res);
+				},
+				error: function(res){
+					if(toolTip.wrongTips(res, this.url, this.heading, this.debug)) { isHoldOn = false; return; }
+				},
+				beforeSend: function(XMLHttpRequest) { },
+				complete: function(XMLHttpRequest, textStatus) { }
+			})
+			if(!isHoldOn) {
+				neui.destroyAnimate();
+				return {};
+			}
+			// END AJAX
+			*/
+			return listJson;
+		}
+
+
+
+		//========================================================
+		/**
+		 * 函数：预览文章按钮 edit 20220601-1
+		 * @param {object} e 一行数据
+		 */
+		function viewOneRow(e){
+			var ls_wz_bh = e["wz_bh"].value,
+				ls_www_url = e["www_url"].value;
+			var arr = [ ls_wz_bh ];
+			// console.log('数组：', arr);
+			if(ls_www_url.toString().replace(/([ ]+)/g, '') != ''){
+				window.open(ls_www_url, '_blank');
+			}else{
+				var linkUrl = g_page_article_show + '?w='+ ls_wz_bh;  // ajax({})
+				window.open(linkUrl, '_blank');
+			}
+		}
+
+
+
+		/**
+		 * 函数：编辑按钮、编辑文章按钮
+		 * @param {object} e 一行数据
+		 */
+		 function editOneRow(e){
+			var ls_wz_bh = e["wz_bh"].value;
+			var arr = [ ls_wz_bh ]
+			// console.log('数组：', arr);
+			var linkUrl = g_page_article_add + '?w=' + ls_wz_bh; // ajax({})
+			window.location.href = linkUrl;
+		}
+
+
+
+		/**
+		 * 函数：单个删除按钮
+		 * @param {object} e 一行数据
+		 */
+		function deleteOneRow(e){
+			neuiDialog.alert({
+				caption: '提示',
+				message: '确认要删除该文章吗？',
+				buttons: ['确定', '取消'],
+				callBack: function(ret){
+					if(ret == 1){
+						delFunc({data:[e]})
+					}
+				}
+			})
+		}
+
+
+
+		/**
+		* 函数：删除操作
+		* @param {Array} ps_arr 数组对象
+		*/
+		function delFunc(ps_arr){
+			// 开始执行
+			var flag = '', msg = '删除成功';
+			neui.showAnimate();
+			setTimeout(function(){
+				var rowCount = 0;
+				for(var i = 0; i < ps_arr.data.length; i++){
+					var row = ps_arr.data[i];
+					var ls_row_index = row["row"] - 1; // 行索引值
+					var ls_wz_bh = row["wz_bh"].value;
+					var oneArr = [ ls_wz_bh ];
+					// console.log('arr:', oneArr);
+
+					if(ls_wz_bh == ''){ // 新插入未保存的记录
+						flag = 1;
+					}else{
+						// 后台返回
+						/*
+						// START AJAX
+						var isHoldOn = true;
+						ajax({
+							heading: "删除文章",
+							debug: false,
+							url: "../fwh_pub/jk_pub.ashx",
+							data: {
+								"action": "del_fjx_pub_news",
+								"user": "<%=s_user %>",
+								"sjk": "<%=s_sjk%>",
+								"wz_bh": ls_wz_bh
+							},
+							success: function(res){
+								if(toolTip.emptyTips(res, this.url, this.heading, this.debug)) { isHoldOn = false; return; }
+								var json = JSON.parse(res);
+								flag = json.result == 'ok' ? 1 : 0;
+								if(!flag) msg = json.result;
+							},
+							error: function(res){
+								if(toolTip.wrongTips(res, this.url, this.heading, this.debug)) { isHoldOn = false; return; }
+							},
+							beforeSend: function(XMLHttpRequest) { },
+							complete: function(XMLHttpRequest, textStatus) { }
+						})
+						if(!isHoldOn) {
+							neui.destroyAnimate();
+							return;
+						}
+						// END AJAX
+						*/
+						flag = parseInt(1); // 1 成功, 0 失败
+						if(!flag) msg = '删除失败';
+
+						if(!flag){
+							break;
+						}
+						else{
+							neuiLikeTable.deleteOneRow(ls_row_index - rowCount);
+							rowCount++;
+						}
+					}
+				}
+				
+				neuiDialog.alert({
+					caption: '提示',
+					message: msg,
+					buttons: ['确定']
+				})
+
+				neui.destroyAnimate();
+			}, 100)
+		}
+
+
+		
+		
+
+
+		////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		$(function(){
+			//————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+            //+                                                     初始化
+            //————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+			//——————————————————————————————————————————
+			//=====加载列表
+			loadData();
+
+
+
+
+
+
+
+
+			//————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+            //+                                                     搜索事件
+            //————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+			//——————————————————————————————————————————
+			//=====查询按钮
+			$(document).on('click', '#btn-query', function(){
+                var ls_title = $('#s-title').val(),
+                    ls_sslm = $('#s-category').val();
+				// 全局赋值
+				g_title = ls_title;
+				g_sslm = ls_sslm;
+				// 加载数据，并重置序号
+                loadData({ resetOrder: true });
+			});
+
+
+
+
+			//————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+            //+                                                     系列事件
+            //————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+			//——————————————————————————————————————————
+			//=====全选按钮
+			$('#btn-select-all').on('click', function(){
+				neuiLikeTable.selectAllRow($tableDom);
+			});
+
+
+			//——————————————————————————————————————————
+			//=====反选按钮
+			$('#btn-select-reverse').on('click', function(){
+				neuiLikeTable.invertAllRow($tableDom);
+			});
+
+
+
+			//——————————————————————————————————————————
+			//=====全不选按钮
+			$('#btn-select-none').on('click', function(){
+				neuiLikeTable.selectNoneRow($tableDom);
+			});
+
+
+
+
+			//——————————————————————————————————————————
+			//=====批量删除按钮
+			$('#btn-delete-all').on('click', function(){
+				var delArr = neuiLikeTable.getTableSelectedData($tableDom); // 选中行数据
+				if(typeof delArr.data == 'undefined') return;
+				if(delArr.data.length == 0){
+					neuiDialog.alert({
+						message: '请至少勾选一篇文章',
+						buttons: ['确定']
+					})
+					return;	
+				}
+				// console.log('全部选中行：', delArr)
+				 // 开始执行
+				 neuiDialog.alert({
+					message: '确认要删除这' + delArr.data.length + '篇文章吗？',
+					buttons: ['确定', '取消'],
+					callBack: function(ret){
+						if(ret == 1){
+							delFunc(delArr);
+						}
+					}
+				})
+			});
+
+
+
+
+			//——————————————————————————————————————————
+			//=====新增按钮
+			$('#btn-add-one').on('click', function(){
+				var linkUrl = g_page_article_add + '?w='; // ajax({})
+				window.location.href = linkUrl;
+			});
+
+
+
+
+
+		}); //$(function(){})
+
+	</script>
+</body>
+</html>

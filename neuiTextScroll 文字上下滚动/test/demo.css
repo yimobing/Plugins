@@ -1,0 +1,102 @@
+* {
+	margin: 0;
+	padding: 0;
+	font-size: 12px
+}
+
+body {
+	background: 0 0
+}
+
+input,button,select,textarea {
+	outline: none
+}
+
+ul,li,dl,ol {
+	list-style: none
+}
+
+a {
+	color: #666;
+	text-decoration: none
+}
+
+.box {
+	width: 980px;
+	margin: 0 auto
+}
+
+.bcon {
+	width: 270px;
+	border: 1px solid #eee;
+	margin: 30px auto
+}
+
+.bcon h1 {
+	border-bottom: 1px solid #eee;
+	padding: 0 10px
+}
+
+.bcon h1 b {
+	font: bold 14px/40px '瀹嬩綋';
+	border-top: 2px solid #3492d1;
+	padding: 0 8px;
+	margin-top: -1px;
+	display: inline-block
+}
+
+.scrollbox {
+	float: left;
+	margin: 15px 15px 0 0;
+}
+
+.scrollbox li {
+	padding: 10px
+}
+
+.scrollbox li.lieven {
+	background: #f0f2f3
+}
+
+.scrollbox li p {
+	height: 24px;
+	line-height: 24px
+}
+
+.scrollbox li p a {
+	float: left
+}
+
+.scrollbox li p em {
+	width: 80px;
+	font: normal 12px/24px Arial;
+	color: #f30;
+	float: right;
+	display: inline-block
+}
+
+.scrollbox li p span {
+	color: #999;
+	float: right
+}
+
+.scrollbox li p a.btn_lh {
+	background: #28bd19;
+	height: 17px;
+	line-height: 17px;
+	color: #fff;
+	padding: 0 5px;
+	margin-top: 4px;
+	display: inline-block;
+	float: right
+}
+
+.btn_lh:hover {
+	color: #fff;
+	text-decoration: none
+}
+
+.btm p {
+	font: normal 12px/24px 'Microsoft YaHei';
+	text-align: center
+}

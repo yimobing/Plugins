@@ -1,0 +1,272 @@
+@charset "utf-8";
+/**
+* 登录界面v.20
+* Author: ChenMufeng
+* Date: 2023.06.07
+* Update: 2023.06.07
+*/
+/*+--------------------------------------+*/
+html,
+body {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0;
+    overflow-x: hidden !important;
+}
+
+body {
+    padding: 0;
+    font-family: 'Hiragino Sans GB W3', 'Hiragino Sans GB', 'microsoft yahei', 'Sim sun', 'Helvetica Neue', 'Helvetica', 'sans-serif';
+    font-size: 16px;
+    color: #555;
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+/*+----------------  ---------------- +*/
+/*+----------------  ---------------- +*/
+.login {
+    positin: relative;
+}
+
+
+
+.login__bg {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    background: rgba(44, 44, 44, 0.2);
+    background: -webkit-linear-gradient(0deg, rgba(44, 44, 44, 0.2), rgba(224, 149, 140, 0.5));
+    background: -o-linear-gradient(0deg, rgba(44, 44, 44, 0.2), rgba(224, 149, 140, 0.5));
+    background: -moz-linear-gradient(0deg, rgba(44, 44, 44, 0.2), rgba(224, 149, 140, 0.5));
+    background: linear-gradient(0deg, rgba(44, 44, 44, 0.2), rgba(224, 149, 140, 0.5));
+}
+
+.login__bg:before {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, .05);
+    background: none\9;
+    opacity: .05\9;
+    filter: alpha(opacity=5)\9;
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=5);
+}
+
+.login__bg:after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    background: transparent url('../img/cms-login-bg2.jpg') center / 100% 100% repeat-y scroll;
+}
+
+
+.login__content {
+    position: absolute;
+    z-index: 1;
+    left: 0%;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 80%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 50px 80px 50px 20px;
+    background-color: #fff;
+    border-radius: 15px;
+
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: flex;
+    display: box;
+}
+.login__photo{
+    width: 55%;
+    background: transparent url('../img/cms-login-photo.png') 0% 0% / 100% auto no-repeat scroll;
+}
+.login__photo.has-custom-photo{
+    background: none;
+}
+.login__photo img{
+    display: block;
+    width: 100%;
+    height: auto;
+}
+.login__subcontent{
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -o-flex: 1;
+    width: 100%;
+    margin-left: 50px;
+}
+.login__info{
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: flex;
+    display: box;
+    align-items: center;
+}
+.login__logo{
+    width: 50px;
+    height: 50px;
+    background: transparent url('../img/cms-logo.png') 50% 50% / 100% auto scroll;
+}
+.login__logo.has-custom-logo{
+    background: none;
+}
+.login__logo img{
+    display: block;
+    width: 100%;
+    height: auto;
+}
+.login__brand{
+    margin-left: 10px;
+    color: #3e56f9;
+    font-size: 24px;
+    font-weight: bold;
+}
+.login__list{
+    
+}
+.login__form{
+    margin: 25px auto;
+}
+.login__form input[type="text"],
+.login__form input[type="password"]{
+    width: 100%;
+    height: 65px;
+    padding-left: 50px;
+    background-color: #eeeeee;
+    border: 0;
+    border-radius: 12px;
+}
+
+.login__box{
+    position: relative;
+    width: 100%;
+    margin-top: 20px;
+}
+.login__box:first-child{
+    margin-top: 0;
+}
+.login__box i{
+    position: absolute;
+    z-index: 1;
+    left: 10px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    display: block;
+    width: 30px;
+    height: 30px;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    background-position: 50% 50%;
+}
+.login__box i.icon__user{
+    background-image: url('../img/cms-login-user2.png');
+}
+.login__box i.icon__pwd{
+    background-image: url('../img/cms-login-password2.png');
+}
+.login__box button{
+    text-indent: -9999px;
+    position: absolute;
+    z-index: 1;
+    right: 15px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: none;
+    border: 0;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+    background-position: 50% 50%;
+    background-image: url('../img/cms-logon-eye.png');
+    cursor: pointer;
+}
+.login__box button.close{
+    background-image: url('../img/cms-logon-eye-close.png');
+}
+.login__box button:hover{
+    opacity: .92;
+    filter: alpha(opacity=92);
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=92);
+}
+
+.login__btn{
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: flex;
+    display: box;
+    align-items: center;
+}
+.login__btn button,
+.login__btn input[type="submit"]{
+    height: 60px;
+    background-color: #3e56f9;
+    border: 0;
+    border-radius: 12px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 20px;
+}
+.login__btn button:hover,
+.login__btn input[type="submit"]:hover{
+    opacity: .92;
+    filter: alpha(opacity=92);
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=92);
+}
+.login__btn button:first-child,
+.login__btn input[type="submit"]:first-child{
+    width: 80%;
+}
+.login__btn button+button,
+.login__btn input[type="submit"]+input[type="submit"]{
+    -webkit-flex: 1;
+    -moz-flex: 1;
+    -o-flex: 1;
+    with: 100%;
+    margin-left: 10px;
+    text-indent: -99999px;
+    width: 30px;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: 26px auto;
+    background-image:  url('../img/cms-login-refresh.png'); 
+}

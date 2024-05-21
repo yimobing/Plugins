@@ -1,0 +1,86 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="format-detection" content="telephone=no,email=no,address=no">
+    <meta name="application-name" content="内评系统">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>demo test</title>
+    <link type="text/css" rel="stylesheet" href="style/meui.css">
+    <!--MEUI框架样式-->
+    <link type="text/css" rel="stylesheet" href="style/meui-dialog.css">
+    <!--MEUI对话框插件样式-->
+</head>
+
+<body>
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+        <title></title>
+    </head>
+
+    <body>
+    </body>
+
+    </html>
+    <div class="wrap">
+        <button type="button" id="btn-popup"></button>
+    </div>
+    <script type="text/javascript" src="style/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript" src="style/awardRotate.js"></script>
+    <script type="text/javascript" src="style/meui.min.js"></script>
+    <!--MEUI前端框架-->
+    <script type="text/javascript" src="style/meui-dialog.js"></script>
+    <!--MEUI对话框插件-->
+    <script>
+    var _html = '<div class="panel-dialog">' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>你好好</li>' +
+        '	<li>各个国家1</li>' +
+        '	<li>各个国家1</li>' +
+        '	<li>各个国家1</li>' +
+        '	<li>各个国家1</li>' +
+        '	<li>各个国家1</li>' +
+        '	<li>各个国家1</li>' +
+        '	<li>各个国家1</li>' +
+        '	<li>各个国家1</li>' +
+        '	<li>各个国家1</li>' +
+        '	<li>各个国家1</li>' +
+        '	<li>各个国家1</li>' +
+        '	<li>各个国家1</li>' +
+        '</div>';
+
+    meuiDialog.feedback({
+        caption: '提示',
+        html: _html,
+        loadTxt: '',
+        buttons: ['关闭'],
+        closeWindow: true,
+        showButton: true
+    })
+    </script>
+</body>
+
+</html>

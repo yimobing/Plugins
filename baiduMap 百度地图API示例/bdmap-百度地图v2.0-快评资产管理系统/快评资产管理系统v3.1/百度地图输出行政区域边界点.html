@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<title>百度地图API获取——行政区域边界点</title>
+	<link type="text/css" rel="stylesheet" href="css/bdmapStyle.css">
+	<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2COzFaICuIyVj7V3VetKfmdRVnX8BhVr"></script><!--百度地图api-->
+</head>
+<body>
+	<section id="allmap"></section><!--百度地图展示区域-->
+</body>
+</html>
+<script type="text/javascript">
+
+
+
+var map = new BMap.Map("allmap"); //allmap为加载地图区域的ID
+map.centerAndZoom("泉州市",8);
+
+map.enableScrollWheelZoom();   //启用滚轮放大缩小，默认禁用
+map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//*                                     分隔线                                                              *//
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+$(function(){
+
+	//=====设置地图区域高度(不然在服务器环境如.net地图可能不显示)
+	var winH = $(window).height();
+	$('#allmap').css('height',winH);
+
+	
+	function getBoundary(areaName){
+		var bdary = new BMap.Boundary();
+		//bdary.get("泉州市丰泽区", function(rs){      
+		bdary.get(areaName, function(rs){       //获取行政区域
+			console.log('\n--------分隔线--------\n');
+			map.clearOverlays();        //清除地图覆盖物       
+			var count = rs.boundaries.length; //行政区域的点有多少个
+			if (count === 0) {
+				alert('未能获取当前输入行政区域');
+				return ;
+			}
+			
+			var pointArray = [];
+			for (var i = 0; i < count; i++) {
+				var ply = new BMap.Polygon(rs.boundaries[i], {strokeWeight: 2, strokeColor: "#ff0000"}); //建立多边形覆盖物
+				map.addOverlay(ply);  //添加覆盖物
+				pointArray = pointArray.concat(ply.getPath());
+			} 
+			//console.log(areaName,'的边界点：',rs.boundaries); //输出边界点
+			console.log(areaName,'的边界点：',rs.boundaries[0]); //输出边界点
+			map.setViewport(pointArray);    //调整视野  
+			addlabel();               
+		});   
+
+	}
+
+
+	setTimeout(function(){
+		var city = "泉州市"; //市
+		var countyArr = ["石狮市","晋江市","南安市","鲤城区","丰泽区","洛江区","泉港区","惠安县","安溪县","永春县","德化县"]; //泉州市管理的区县
+		for(var m=0;m<countyArr.length;m++){
+			var areaName = city+countyArr[m];
+			console.log('areaName:',areaName);
+			getBoundary(areaName);
+		}
+	}, 2000);
+	
+	
+	
+	function addlabel() {
+	    var pointArray = [
+	      new BMap.Point(121.716076,23.703799),
+	      new BMap.Point(112.121885,14.570616),
+	      new BMap.Point(123.776573,25.695422)];
+	    var optsArray = [{},{},{}];
+	    var labelArray = [];
+	    var contentArray = [
+	      "台湾是中国的！",
+	      "南海是中国的！",
+	      "钓鱼岛是中国的！"];
+	    for(var i = 0;i < pointArray.length; i++) {
+	      optsArray[i].position = pointArray[i];
+	      labelArray[i] = new BMap.Label(contentArray[i],optsArray[i]);
+	      labelArray[i].setStyle({
+			color : "red",
+			fontSize : "12px",
+				 height : "20px",
+				 lineHeight : "20px",
+				 fontFamily:"微软雅黑"
+			 });
+	      map.addOverlay(labelArray[i]);
+	    }	  
+	}
+
+	
+
+}); //END $(function(){});
+	
+</script>

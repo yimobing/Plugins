@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta name="author" content="ChenMufeng">
+	<title>MeuiCMS——Meui框架内容管理系统</title>
+	<meta name="keywords" content="">
+	<meta name="description" content="">
+	<link type="text/css" rel="stylesheet" href="font-awesome/css/font-awesome.css">
+	<link type="text/css" rel="stylesheet" href="css/meui-cms.css">
+	
+</head>
+<body>
+	<header id="meui-header">
+		<section class="head-fl"><img src="img/logo.png" alt="Meui框架内容管理系统"/><span>Meui框架内容管理系统</span></section>
+		<section class="head-fr">
+			<div class="meui-user">
+				<div class="inner">
+					<div class="avar"><img src="img/icon-avar.png" alt=""></div>
+					<div class="nick">张三李四王五</div>
+					<div class="icon"><i class="fa fa-angle-down"></i></div>
+				</div><!--/inner-->
+				<div class="meui-dropdown" style="display: none">
+					<ul>
+						<li id="btn_set"><i class="fa fa-gear"></i><a href="javascript:void(0)">账号设置</a></li>
+						<li id="btn_authority"><i class="fa fa-gear"></i><a href="javascript:void(0)">权限管理</a></li>
+						<li id="btn_quit"><i class="fa fa-circle-o-notch"></i><a href="javascript:void(0)">退出登录</a></li>
+					</ul>
+				</div><!--/meui-dropdown-->
+			</div><!--/meui-user-->
+		</section><!--/head-fr-->
+		<section class="head-fm">
+			<div class="meui-topBtnGroup">
+				<div class="topbtn-one"><i class="fa fa-arrows"></i><button type="button" id="btn_fullScreen" data-fullscreen="0">开启全屏</button></div>
+			</div><!--/meui-btopBtnGroup-->
+		</section><!--/head-fm-->
+	</header>
+	<aside id="meui-sidebar">
+		<section class="aside-webname"><span>系统菜单</span><i class="fa fa-list-ul"></i></section>
+		<section class="aside-buttons">
+			<button type="button">退出</button>
+			<button type="button">换肤</button>
+			<button type="button">设置</button>
+		</section>
+		<nav class="aside-nav">
+			<ul class="nav-list"></ul><!--/nav-list-->
+		</nav>
+		<section class="aside-stretch">
+			<div class="inner"><i class="fa fa-angle-double-left"></i></div>
+		</section>
+	</aside>
+	<main id="meui-main">
+		<section class="section-main">
+			<div class="panel-bread">
+				<div class="bread-home"><a href="html/welcome.html" target="contentFrameName"><i class="fa fa-home"></i><span class="home">首页</span></a></div>
+				<div class="bread-now"><i class="fa fa-angle-right"></i><span class="now">控制台</span></div>
+			</div><!--/panel-bread-->
+			<div class="panel-content">
+				<iframe name="contentFrameName" frameborder="0" scrolling="yes" id="contentFrameID" src="html/welcome.html"></iframe>
+			</div><!--/panel-content-->
+		</section>
+	</main>
+	
+	<script type="text/javascript" src="js/jquery-1.8.3.min.js"></script>
+	<script type="text/javascript" src="js/jquery.meui-cms.js"></script>
+	<script type="text/javascript">
+		////////////////////////////////////////////////////////////////////////////////////////
+		$(function(){
+			/*+-------------------------+*/
+			//=====菜单json
+			var $menuJson = {
+				data:[
+					{"menu":"码云", "url":"https://gitee.com/"},
+					{"menu":"搜索引擎", "url":"", 
+					"data":[
+							{"menu":"百度搜索", "url":"https://www.baidu.com/"},
+							{"menu":"360搜索", "url":"https://www.so.com/"},
+							{"menu":"搜狗搜索", "url":"https://www.sogou.com/"},
+							{"menu":"SEO工具", "url":"", 
+							 "data":[
+							 	{"menu":"5188网", "url":"https://www.5118.com/"},
+							 	{"menu":"爱站网", "url":"https://www.aizhan.com/"}
+							 ]
+							},
+							{"menu":"IP工具", "url":"",
+							 "data":[
+							 	{"menu":"IP查询", "url":"http://ip.tool.chinaz.com/"},
+							 	{"menu":"路由跟踪", "url":"http://www.webkaka.com/Tracert.aspx"}
+							 ]
+							}
+						]
+					},
+					{"menu":"宣朗官网", "url":"",
+					 "data":[
+					 	{"menu":"宣朗官网PC", "url":"http://www.simloan.com/frd_gwpc/index.aspx"},
+						{"menu":"宣朗官网手机", "url":"http://www.simloan.com/frd_gwsj/index.aspx"}
+					 ]
+					}
+				]
+			}
+
+			createNavList($menuJson); //调用函数创建左侧菜单
+
+
+			/*+-------------------------+*/
+			//=====前端系列事件集合
+			MeuiCmsWebFrontFunc(); 
+
+
+			/*+-------------------------+*/
+			//..window.open(url,iframeName); //指定在ifame中打开,请在web目录中打开,因为iframe跨域可能不起作用
+			//=====账号设置事件
+			$('#btn_set').on('click',function(){
+				alert('账号设置事件');
+				//...
+				window.open('account-账号设置.html','contentFrameName'); //指定在ifame中打开
+			});
+
+			/*+-------------------------+*/
+			//=====权限管理事件
+			$('#btn_authority').on('click',function(){
+				alert('权限管理事件');
+				//...
+				window.open('authority-权限管理.html','contentFrameName'); 
+			});
+
+
+			/*+-------------------------+*/
+			//=====退出登录事件
+			$('#btn_quit').on('click',function(){
+				alert('退出登录事件');
+				//...
+				window.location.href = 'login-用户登录.html';
+			});
+
+
+		}); //$(function(){})
+	</script>
+</body>
+</html>

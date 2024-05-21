@@ -1,0 +1,97 @@
+charset "utf-8";
+
+/**
+* [房金信]
+* 文章内容页
+* Author: ChenMufeng
+* Date: 2022.05.19
+* Update: 2022.05.31
+*/
+
+/*+----------------------------------------+*/
+body,html{ width:100%; margin:0 auto; padding:0; -webkit-text-size-adjust:none; -webkit-tap-highlight-color:transparent; }
+*:not(input,textarea) { -webkit-touch-callout: none; -webkit-user-select: none; }
+html{font-size: 20px;}
+@media only screen and (min-width:400px){html{font-size:21.33333333px!important}}
+@media only screen and (min-width:414px){html{font-size:21px!important}}
+@media only screen and (min-width:480px){html{font-size:25.6px!important}}
+body{background-color:#fff;line-height:1.5;font-family:'Hiragino Sans GB W3','Hiragino Sans GB','microsoft yahei','Sim sun','Helvetica Neue','Helvetica,sans-serif';font-size:.7rem;color:#212121;overflow-x:hidden;overflow-y:auto}
+body.mobile{ max-width: 640px; margin: 0 auto; }
+body.transparent{ background-color: #f4f4f4; }
+*{margin:0;padding:0;-moz-box-sizing:border-box;-o-box-sizing:border-box;-webkit-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;outline:0;-webkit-tap-highlight-color:transparent}
+header, footer, main, section, menu, nav, article, aside, hgroup, summary, details, figcaption, figure{display: block;}
+
+/*+----------------------------------------+*/
+body{
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 2px;
+    background-color: #f4f4f4;
+    border-radius: 2px;
+}
+.wrap{
+    padding: 10px 15px;
+    background-color: #fff;
+}
+
+
+/*+----------------------------------------+*/
+.caption{
+    text-align: center;
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.meta{
+   margin: 25px auto;
+}
+/*媒体信息*/
+.meta__infos{
+    padding: 10px 15px;
+    border-style: solid;
+    border-color: #c1b8b8;
+    border-width: 1px;
+    border-radius: 4px;
+}
+
+.meta__infos>span{
+    margin-right: .85rem;
+    font-size: .6rem;
+}
+.meta__infos>span:first-child{
+    margin-left: 0;
+}
+
+.meta__infos>span>label{
+    font-weight: bold;
+}
+.meta__infos>span>em{
+    color: #999;
+    font-style: normal;
+}
+
+/*摘要*/
+.meta__describe{
+    margin-top: 15px;
+    text-indent: 1.25rem;
+    line-height: 1.75;
+    padding: 10px;
+    border: 1px solid #c1b8b8;
+    border-radius: 4px;
+    color: #888;
+    font-size: .65rem;
+}
+
+/*内容*/
+.content{
+    text-indent: 1.25rem;
+    line-height: 1.75;
+}
+
+.content p,
+.content br,
+.content div{
+    margin-bottom: 10px;   
+    color: #777;
+    font-size: .8rem;
+}

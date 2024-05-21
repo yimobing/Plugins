@@ -1,0 +1,158 @@
+@charset "utf-8";
+/*+------------------------------------------------------------------------+*/
+
+table{
+	border-collapse: collapse;
+	/* table-layout: fixed; */
+	width: 100%;
+}
+
+
+/*单元格*/
+.likeTable th, 
+.likeTable td{
+	padding: 8px 12px;
+	background-color: #fff;
+	border: 1px solid #778899;
+}
+
+/*表头*/
+.likeTable thead tr th,
+.likeTable thead tr td,
+.likeTable tfoot tr th,
+.likeTable tfoot tr td{
+	background-color: #8ca9cf;
+	background-image: -moz-linear-gradient(
+		top,
+		rgba(255,255,255,0.4) 0%,
+		rgba(255,255,255,0.2) 50%,
+		rgba(255,255,255,0.1) 51%,
+		rgba(255,255,255,0.0) 100%
+	);
+	background-image: -webkit-gradient(
+		linear, left top, left bottom,
+		color-stop(0%,rgba(255,255,255,0.4)),
+		color-stop(50%,rgba(255,255,255,0.2)),
+		color-stop(51%,rgba(255,255,255,0.1)),
+		color-stop(100%,rgba(255,255,255,0.0))
+	);
+	color: #121517;
+	font-size: 12px;
+	font-weight: bold;
+	text-shadow: 0 1px 1px #e8ebee;
+}
+
+/*表身*/
+.likeTable tbody tr td{
+	background-color: #eef2f9;
+	background-image: -moz-linear-gradient(
+		top,
+		rgba(255,255,255,0.4) 0%,
+		rgba(255,255,255,0.2) 50%,
+		rgba(255,255,255,0.1) 51%,
+		rgba(255,255,255,0.0) 100%
+	);
+	background-image: -webkit-gradient(
+		linear, left top, left bottom,
+		color-stop(0%,rgba(255,255,255,0.4)),
+		color-stop(50%,rgba(255,255,255,0.2)),
+		color-stop(51%,rgba(255,255,255,0.1)),
+		color-stop(100%,rgba(255,255,255,0.0))
+	);
+	color: #262c31;
+	font-size: 11px;
+}
+
+.likeTable tbody tr.odd td {
+	/* appearance */
+	background-color: #d6e0ef;
+	background-image: -moz-linear-gradient(
+		top,
+		rgba(255,255,255,0.4) 0%,
+		rgba(255,255,255,0.2) 50%,
+		rgba(255,255,255,0.1) 51%,
+		rgba(255,255,255,0.0) 100%
+	);
+	background-image: -webkit-gradient(
+		linear, left top, left bottom,
+		color-stop(0%,rgba(255,255,255,0.4)),
+		color-stop(50%,rgba(255,255,255,0.2)),
+		color-stop(51%,rgba(255,255,255,0.1)),
+		color-stop(100%,rgba(255,255,255,0.0))
+	);
+}
+
+
+
+/*设置某列的宽度*/
+/*
+th:nth-child(1),
+td:nth-child(1){
+	width: 120px;
+}
+*/
+
+
+
+.like-table-wrapper{
+	position: relative;
+}
+
+.like-fixed-column,
+.like-fixed-body{
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+.like-fixed-column{
+	z-index: 1;
+}
+
+.like-fixed-body{
+	margin: 0 auto;
+	/* border: 1px solid blue; */
+}
+
+.like-table-wrapper .like-thead,
+.like-table-wrapper .like-tfoot{
+	position: relative;
+	overflow: hidden;
+}
+.like-table-wrapper .like-tbody{
+	position: relative;
+	overflow: auto;
+}
+.like-fixed-column .like-tbody{
+	overflow: hidden;
+}
+
+
+.like-cell{
+	overflow: hidden;
+	height: 1px;
+}
+
+
+
+/*要在插件中设置的*/
+.like-fixed-column{
+	width: 171px;
+	height: 0px;
+}
+.like-fixed-body{
+	width: 450px;
+}
+.like-fixed-body .like-tbody{
+	height: 320px;
+}
+.like-fixed-body .like-tbody table{
+	margin-top: -104px;
+}
+
+.like-fixed-column .like-tbody{
+	margin-top: -1px;
+	height: 305px;
+}
+.like-fixed-column .like-tfoot{ 
+	top: 17px;
+}

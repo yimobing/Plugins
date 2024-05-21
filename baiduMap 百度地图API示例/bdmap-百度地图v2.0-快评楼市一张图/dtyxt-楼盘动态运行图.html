@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="网站名称">
+    <meta name="applicable-device" content="pc,mobile">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <title>楼盘动态运行图</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <link type="text/css" rel="stylesheet" href="meui/css/meui-bdmap.css"><!--meui百度地图-->
+    <link type="text/css" rel="stylesheet" href="meui/css/meui-textScroll.css"><!--meui文字滚动-->
+    <!--<link type="images/x-icon" rel="shortcut icon" href="/favicon.ico">-->
+    <!--<script type="text/javascript">if(top.location != self.location){ top.location = self.location; }</script>-->
+    <!--[if lt IE 9]>
+        <script type="text/javascript" src="meui/js/html5.min.js"></script>
+        <script type="text/javascript" src="meui/js/respond.min.js"></script>
+        <script type="text/javascript" src="meui/js/rem.min.js"></script>
+        <script type="text/javascript" src="meui/js/json2.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <style>
+        html, body{
+            padding: 0;
+            font-size: 16px;
+        }
+        *{
+            padding: 0;
+            -webkit-box-sizing: border-box; 
+            -moz-box-sizing: border-box; 
+            -o-box-sizing: border-box; 
+            -ms-box-sizing: border-box; 
+            box-sizing: border-box;
+            outline: none;
+        }
+        i,em{font-style: normal;}
+
+        .wrap{}
+        .wrap:after{content: ''; display: block; clear: both;}
+        .panel-text,
+        .panel-map{float: left;}
+        .panel-text{width: 400px; border: 1px solid #ddd;}
+        .panel-map{margin: 15px auto; padding: 10px 15px; border: 1px solid #ddd; border-radius: 4px;}
+
+        /*顶部信息汇总*/
+        .summaryBox{
+            position: fixed;
+            z-index: 3;
+            top: 5px;
+            left: 10px;
+            width: auto;
+            padding: 10px 15px;
+            background-color: #fff;
+            /*border: 1px solid #06F;*/
+            border-radius: 4px;
+            box-shadow: 1px 2px 8px rgba(0,0,0,.35);
+        }
+        .summaryCaption{text-align: center; margin-bottom: 15px; font-size: 18px; font-weight: bold;}
+        .summaryDiv:after{content: ''; display: block; clear: both;}
+        .summary-one{float: left; width: auto; margin-left: 15px; cursor: pointer;}
+        .summary-one:first-child{margin-left: 0;}
+        .summary-one:hover{color:#06F;}
+        .summary-one .img{width: 30px; height: 30px; margin: 0 auto; /*border: 1px solid #ddd; border-radius: 4px;*/}
+        .summary-one .img i{
+            display: block; 
+            width: 100%; 
+            height: 100%;
+            background: transparent url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAACzklEQVRIS8WXT08TURTFfy8muLKDX4DCxrjhj+5MNIW4g0balYkubJfoAlwY2RVWmGhMdeNSSIQtkEDiwoQSMTHRGCgLl7R8AUu/wJjz2uIwnekUGOEmkzad99655937zjs1XFKYLnF7gUlgFOhvframVgA9u8BS8zNy2ShgARaAGf9Kw4NQO4LqYRuGkshGJdAJOGcMRdfFSSRws2lMZgIy6XYytRosrjSevX24PcSbX2VedKIdBrwIPNHEwizMTEGvuHcbLjWukDXXKIVNCQJeUz0dB0obMDLULVrAOEPeJBCJtvADF4Fp1U+gp2IZnt+ccZj3v/YCZ4BV1XNvB9OfPAdT39Q79zn8/pMEMADU9NoLrG5Mbm3A6L34QLVSbgqWVuyaYj7nBc4BH1N3obQZL6hWU9cnB3HrdUv0un5qMdbhHz4oQ9AWV6rw+n10Qld74O1C8LiZWXj3wb57DhQFLCU6SPZBZT940uZnSD+MBr55A37/CB63W4ZbjRJuS/kEbLd5egqKr/4fsFbu7YOjI4thBKxiF1aXg1VJo+JgrHVGJ2B7xwKPCdiqVKdujgvYU2cLLFlLXQTw3ALMN8p5sYwzj2C9cVwt8GXUeOBSu1oX3h8JhwQkKOJortJXGGvc5etA5oRyhTWYJO9L6M36L9WeHngwHpy8R6/zOkktYCsiuhwEHndIcgeGrGrUXRfde8daLSyr152E5KwJebrZ6rSVLs9icpBbjoNb2sCcy3l4FvWc3T1gpPXK70Ds0RLo6qfgm+o0rBeXIf/0eItTXucZ5LmshIr52jLmrKbAI4/KVXZXXu44wlym9V4alXsMhZfds9exyT8DNVSzmU4wDdtqb1LyYGLv6Ef5afnqyfF2E6i7dvtbw1frezN07+q0yFK1RTf/JPQvQo9NoIuoNgE7nvwoYP8OqPPVmXItLR8qZgrVUE8gQ3/CfwEVWOs/4t1V9AAAAABJRU5ErkJggg==') 50% 50% no-repeat;
+            background-size: 100% auto;
+        }
+        .summary-one .img i.play{
+            background: transparent url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAEVElEQVRIS8VWXWhbZRh+XrtWRzoamQxmK2biinqhyYXt6sC1FwobnKxFZWk6NPHGiyJNLxRE0XQI3pQ1UbwQwWVqTo46MW06BL0wE7RmCs28cDgU0rlMQQcZdna6LK983/npyenJT/Vi3+X53vM978/zvO9LuEGHbhAuNgUcDp/011A7SMReBvml08wlgErEnM9kgqfaDaQl8GjkE+8t/2yZIuIYQN7mD3OFmRJXu6rJbGqs0sy2KXDocG4YNT5GRD49OL4MoiwYJYBLxFRhgh8EHzGGQbhTBxMOYFpTg6lG4A2BQ+GFCBEd09/BCoPjzR4SZtJRRoKABwwHEpl0cNoN3BXYDsrAcS2tRNqtnXQgnIsT4RXD6WRGVWLO/zcAC6+J8YWeWsxoqhLfDKhpW+c8c9SZrTpgnUgdy6Km/yVSp4PjE4sxgOdkza93BjRtf8m0qQO2UsRYyaiKJNT/PePhhTyI9jkDcQAvVIioh11SY5FHshxeIRtNVWZaOWYv3Vpn9VZTZhawaA5MtWUhGU0Nuup1fCLHdiBmKanpTEbJNnMgNJErCqbbA7KAzTQ3qm096ThKoLipWwbyuL4laq+h3RG3ty3g8XAuAcJUIybbgTNphYyOJsgTE+UxGswG9polkkphPpVRg8Pimw3YIEGT+poyE8CWbEKf+tBRjRPwlPhmv7NsTIkyihlVCbgCo4Yxt5o5IzYfXe/lkHpvBszAGS2tyOGy7vlELiW8bjfVeocSbRVz5vDYffu5N59/4ug1iMnF7GNQkQj5l4+/+POvlb6ca6o3RS7CCNUwBzEgZCvHmegjqZ/23ld4zI3di6cPlOeXlF5mntfU4Gh9xEYdhEQ0NbjL7YFQWNe5eSekR3RT/O2pZ3wATTWS1OyJafxY7sfO7eefO/r65GwdsJE6vYEQRrT3lbxrC2SOSRkxkmtd1fh7k8/6TdK5Af9xeTteSL0qr44cPvLN7v3fDrkA61NF6FJLKyOtupK4/7PQlyXCwUa273z2JJbODsF/VxGTyluiMIHugbJoKOvHGBIlvW22N5lWC70lEBkLQD38Vz/sQepzqTK8FnkJt/VcEsDR7oGyIHL9aTXOnParp/vq2qh5/8vvfZj9OIa//vZAGTyJ4J5FeSUC2jZ4Qeh+4zG7mLipMWIfqEqyUSpXC71FEBkbh24lIv3wy8cl6NC9S3j60Xet34lrY57Bi9mGq48dXPZiwowb4ew1FkTKFQ7g67MPSSABemjfR/DcvGYBd3RWd20N/FZqvuyFF8TKk7AkxCgykBWrrPnS4D1Ld9+x4+Ib35fu33ruQr8FYE/verY42T1QlmtQy/U25OjFrZgu2Hvo4RMGkWzWzCuerit+ClTk2tsS2PzVYPwoiIZJtEPSd2xirjBQebD/u/Nje+cjO3oubXM6x4z57q7ViAm6KeBWkUrGLnu9V655REv0M8tdvEjEWaFb5/9tR9wO8GZs/gWYmzU9V4Zs7wAAAABJRU5ErkJggg==') 50% 50% no-repeat;
+        }
+        .summary-one .text{margin-top: 8px; text-align: center; font-size: 12px;}
+        /*询价单数量统计*/
+        .countBox{
+            position: fixed;
+            z-index: 2;
+            top: 155px;
+            left: 10px;
+            width: 200px;
+            padding: 10px 15px;
+            background-color: #fff;
+            border: 1px solid #06F;
+            border-radius: 4px;
+            box-shadow: 1px 2px 8px rgba(0,0,0,.35);
+        }
+        .countCaption{margin-bottom: 15px; text-align: center; font-size: 16px; font-weight: bold;}
+        .countBox p{padding: 5px 0; border-top: 1px dotted #ddd; font-size: 14px;}
+        .countBox p:first-child{border-top: 0;}
+        .countBox p span{}
+        .countBox p em{font-style: italic;}
+        .countBox p i{margin-left: 5px; font-size: 12px; color: #aaa;}
+        
+        /*地图*/
+        #allmap{width: 100%;}
+        .bdtitle{font-size: 16px; font-weight: bold;}
+        .bdaddress{display: block; margin-top: 8px;}
+        .bdcate{display: block; margin-top: 5px; color: #1296db;}
+        .btn-details {
+            width: 92%;
+            margin: 5px auto 0 auto;
+            background-color: #3daafc;
+            padding: 5px 12px;
+            border: 0;
+            border-radius: 2px;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        /*文字滚动*/
+        .scrollbox{
+            position: fixed;
+            z-index: 2;
+            left: 10px;
+            bottom: 25px;
+        }
+        
+    </style>
+
+    <div class="wrap">
+        <div class="panel-text">
+            <!--[顶部信息汇总]-->
+            <div class="summaryBox">
+                <div class="summaryCaption">控制台</div>
+                <div class="summaryDiv">
+                    <div class="summary-one" id="btn-count" title="结束">
+                        <div class="img"><i class="fa play"></i></div>
+                        <div class="text">询价单数量统计</div>
+                    </div>
+                    <div class="summary-one" id="btn-message" title="结束">
+                        <div class="img"><i class="fa play"></i></div>
+                        <div class="text">询价单最新消息</div>
+                    </div>
+                    <div class="summary-one" id="btn-map" title="结束">
+                        <div class="img"><i class="fa play"></i></div>
+                        <div class="text">楼盘坐标数据</div>
+                    </div>
+                </div>
+            </div><!--/.summaryBox-->
+            <!--[询价单数量统计]-->
+            <div class="countBox">
+                <div class="countCaption">询价单数量统计</div>
+                <div id="countDiv"></div>
+            </div><!--/.countBox-->
+
+            <!--[询价单最新消息数据]-->
+            <div class="scrollbox">
+                <div class="scrollCaption">询价单最新消息</div>
+                <div id="scrollDiv"></div>
+                <div class="scroltit">
+                    <div class="updown" id="but_down">向上</div><div class="updown" id="but_up">向下</div>
+                </div>
+            </div>
+
+        </div><!--/.panel-text-->
+
+        <div class="panel-map">
+            <!--[百度地图展示区域]-->
+            <div id="allmap"></div>
+        </div><!--/.panel-map-->
+
+    </div><!--/.wrap-->
+
+    <!--================================================================================-->
+    <!--                            JAVASCRIPT                                          -->
+    <!--================================================================================-->
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=2COzFaICuIyVj7V3VetKfmdRVnX8BhVr"></script><!--百度地图API库文件-->
+    <script type="text/javascript" src="meui/js/meui-bdmap.js"></script><!--MEUI百度地图插件-->
+    <script type="text/javascript" src="meui/js/meui-textScroll.js"></script><!--meui文字滚动-->
+    <script type="text/javascript">
+
+        /*+-------------------全局变量---------------------+*/
+        //=====定时时间间隔(秒)
+        var g_times1 = 10; //询价单数量统计
+        var g_times2 = 10; //询价单最新消息
+        var g_times3 = 10; //楼盘坐标数据(地图)
+
+        //ajax获取定时时间间隔
+      
+
+        /*+----------------FUNCTION----------------+*/
+        /**
+        * 获取询价单数量统计数据
+        * @returns {object} 返回统计数据
+        */
+        var count_total = 0;
+        function get_data_total(){
+            count_total++;
+            if(count_total == 1)
+                var json = {"xjsl_yea":"1500", "xjsl_mon":"500", "xjsl_day":"20"}
+            else
+                var json = {"xjsl_yea":"2300", "xjsl_mon":"650", "xjsl_day":"80"}
+            return json;
+        }
+
+
+        /**
+        * 获取询价单最新消息数据
+        * returns {object} 返回消息数据
+        */
+        var count_msg = 0;
+        function get_data_message(){
+            count_msg++;
+            if(count_msg == 1)
+                var json = {
+                    data:[
+                        {"title":"东海太禾广场13号楼1918室", "shuoming":"东海太禾广场13号楼1918室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"闻馨一品15号楼0908室", "shuoming":"闻馨一品15号楼0908室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"城东星光耀广场20号楼2021室", "shuoming":"城东星光耀广场20号楼2021室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"星湖雅苑6号楼1705室", "shuoming":"星湖雅苑6号楼1705室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"万科上悦城7号楼1205室", "shuoming":"万科上悦城7号楼1205室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"}
+                    ]
+                }
+            else
+                var json = {
+                    data:[
+                        {"title":"东海太禾广场13号楼1918室222", "shuoming":"东海太禾广场13号楼1918室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"闻馨一品15号楼0908室222", "shuoming":"闻馨一品15号楼0908室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"城东星光耀广场20号楼2021室222", "shuoming":"城东星光耀广场20号楼2021室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"星湖雅苑6号楼1705室222", "shuoming":"星湖雅苑6号楼1705室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"},
+                        {"title":"万科上悦城7号楼1205室222", "shuoming":"万科上悦城7号楼1205室有最新询价消息<br>用户张三发起了询价，询价对象1918室，<br>价格135000元/月", "create_time":"2020-12-15 14:32:21"}
+                    ]
+                }
+
+            return json;
+        }
+
+
+
+
+        /**
+         * 获取楼盘数据
+         * @returns {array} 返回楼盘数据 
+         */
+        var count_house = 0;
+        function get_data_house(){
+            count_house++;
+            if(count_house == 1)
+                var json = {
+                    data:[
+                        {"qydcb_mc":"泉州国税局大厦", "zuobiao":"118.606747,24.905256", "xjlb":"提交询价", "shuoming":"用户已提交询价，待接单", "create_time":"2020-12-15 14:32:21"},
+                        {"qydcb_mc":"北峰万科城", "zuobiao":"118.613382,24.915539", "xjlb":"自助查询", "shuoming":"用户已提交询价，待接单", "create_time":"2020-12-15 14:32:21"},
+                        {"qydcb_mc":"万科上悦城", "zuobiao":"118.614711,24.912884", "xjlb":"人工查询", "shuoming":"用户已提交询价，待接单", "create_time":"2020-12-15 14:32:21"}
+                        // ,{"qydcb_mc":"聚龙小镇", "zuobiao":"118.60695,24.917538", "xjlb":"人工查询", "shuoming":"用户已提交询价，待接单", "create_time":"2020-12-15 14:32:21"},
+                        // {"qydcb_mc":"富临国际", "zuobiao":"118.605225,24.913474", "xjlb":"人工查询", "shuoming":"用户已提交询价，待接单", "create_time":"2020-12-15 14:32:21"},
+                        // {"qydcb_mc":"闻馨一品", "zuobiao":"118.618628,24.917439", "xjlb":"人工查询", "shuoming":"用户已提交询价，待接单", "create_time":"2020-12-15 14:32:21"},
+                        // {"qydcb_mc":"建发珑月湾", "zuobiao":"118.613597,24.909279", "xjlb":"人工查询", "shuoming":"用户已提交询价，待接单", "create_time":"2020-12-15 14:32:21"}
+                    ]
+                }
+
+            else
+                var json = {
+                    data:[
+                        // {"qydcb_mc":"泉州国税局大厦", "zuobiao":"118.387008,24.962711", "xjlb":"提交询价", "shuoming":"用户已提交询价，待接单", "create_time":"2020-12-15 14:32:21"},
+                        // {"qydcb_mc":"北峰万科城", "zuobiao":"118.613382,24.915539", "xjlb":"自助查询", "shuoming":"用户已提交询价，待接单", "create_time":"2020-12-15 14:32:21"},
+                        // {"qydcb_mc":"万科上悦城", "zuobiao":"118.614711,24.912884", "xjlb":"人工查询", "shuoming":"用户已提交询价，待接单", "create_time":"2020-12-15 14:32:21"},
+                        {"qydcb_mc":"聚龙小镇", "zuobiao":"118.60695,24.917538", "xjlb":"人工查询", "shuoming":"用户已提交询价，待接单", "create_time":"2020-12-15 14:32:21"},
+                        {"qydcb_mc":"富临国际", "zuobiao":"118.605225,24.913474", "xjlb":"人工查询", "shuoming":"用户已提交询价，待接单", "create_time":"2020-12-15 14:32:21"},
+                        {"qydcb_mc":"闻馨一品", "zuobiao":"118.618628,24.917439", "xjlb":"人工查询", "shuoming":"用户已提交询价，待接单", "create_time":"2020-12-15 14:32:21"},
+                        {"qydcb_mc":"建发珑月湾", "zuobiao":"118.613597,24.909279", "xjlb":"人工查询", "shuoming":"用户已提交询价，待接单", "create_time":"2020-12-15 14:32:21"}
+                    ]
+                }
+            return json;
+        }
+
+
+
+        //========================================
+        /**
+         * 创建询价单数量统计HTML
+         */
+        function createCount(ps_source){
+            var node = '#countDiv';
+            if($.isEmptyObject(ps_source) || !ps_source) return;
+            $(node).parent().show();
+            var ls_xjsl_yea = ps_source["xjsl_yea"],
+                ls_xjsl_mon = ps_source["xjsl_mon"],
+                ls_xjsl_day = ps_source["xjsl_day"];
+            var _html = [
+                '<p><span>本年总询价：</span><em>' + ls_xjsl_yea + '</em><i>单</i></p>',
+                '<p><span>本月总询价：</span><em>' + ls_xjsl_mon + '</em><i>单</i></p>',
+                '<p><span>本日总询价：</span><em>' + ls_xjsl_day + '</em><i>单</i></p>',
+            ].join('\r\n');
+            if($(node).length > 0){
+                $(node).empty().append(_html);
+            }
+        }
+
+
+        /**
+         * 创建询价单最新消息HTML
+         */
+         function createMessage(ps_source){
+            var node = '#scrollDiv';
+            var _html = '<ul>';
+            if(typeof ps_source.data == 'undefined') return;
+            if(ps_source.data != 0) $(node).parent().show();
+            else $(node).parent().hide();
+            $.each(ps_source.data, function(i, item){
+                _html += '<li>'+
+                            '<h3><a href="javascript:;" class="linktit">' + item["title"] + '</a></h3>'+
+                            '<span class="time">' + item["create_time"] + '</span>'+
+                            '<div>' + item["shuoming"] + '</div>'+
+                        '</li>';
+            })
+            _html += '</ul>';
+            if($(node).length > 0){
+                $(node).empty().append(_html);
+            }
+        }
+
+
+        
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        $(function () {
+
+            
+            /*+----------------------------------------+*/
+            //=====创建询价单数量统计
+            var $countBox = $('.countBox');
+            $('#btn-count').on('click', function(){
+                var $fa = $(this).find('.fa');
+                if($fa.hasClass('play')){
+                    $(this).attr('title', '开始');
+                    $fa.removeClass('play').addClass('stop');
+                    $countBox.hide();
+                }else{
+                    $(this).attr('title', '结束');
+                    $fa.removeClass('stop').addClass('play');
+                    $countBox.show();
+                }
+                runCount();
+            });
+
+            runCount();
+            var timer1;
+            function runCount(){
+                if($countBox.is(':visible')){
+                    timer1 = setInterval((function target(){
+                        var totalJson = get_data_total();
+                        createCount(totalJson);
+                        return target;
+                    })(), g_times1 * 1000)     
+                }else{
+                    clearInterval(timer1);
+                }
+            }
+
+           
+
+            
+            /*+----------------------------------------+*/
+            //=====创建询价最新消息
+            var $scrollbox = $('.scrollbox');
+            $('#btn-message').on('click', function(){
+                var $fa = $(this).find('.fa');
+                if($fa.hasClass('play')){
+                    $(this).attr('title', '开始');
+                    $fa.removeClass('play').addClass('stop');
+                    $scrollbox.hide();
+                }else{
+                    $(this).attr('title', '结束');
+                    $fa.removeClass('stop').addClass('play');
+                    $scrollbox.show(); 
+                }
+                runMessage();
+            });
+
+            runMessage();
+            var timer2;
+            function runMessage(){
+                if($scrollbox.is(':visible')){
+                    timer2 = setInterval((function target(){
+                        var messageJson = get_data_message();
+                        createMessage(messageJson);
+                        $("#scrollDiv").meuiTextScroll({
+                            width: 340,
+                            height: 400,
+                            line: 1, //每次滚动的行数
+                            speed: 500, //滚动速度(毫秒)
+                            timer: 2000, //滚动间隔时间(毫秒)
+                            up: "but_up", //向上按钮ID属性名称
+                            down: "but_down" //向下按钮ID属性名称
+                        })
+                        return target;   
+                    })(), g_times2 * 1000)
+                }else{
+                    clearInterval(timer2);
+                }
+            }
+            
+            
+
+          
+
+            /*+----------------------------------------+*/
+            //=====创建楼盘坐标数据/地图初始化
+            var winW = $(window).width(),
+                winH = $(window).height(),
+                textW = $('.panel-text').outerWidth(true),
+                pdLeft = $('.panel-map').css('paddingLeft').toString().replace(/px/g, '') * 2,
+                pdTop = $('.panel-map').css('paddingTop').toString().replace(/px/g, '') * 2,
+                mnLeft = $('.panel-map').css('marginLeft').toString().replace(/px/g, '') * 2,
+                mnTop = $('.panel-map').css('marginTop').toString().replace(/px/g, '') * 2;
+
+            var width = winW - textW - mnLeft - pdLeft,
+                height = winH - mnTop;
+            $('.panel-map').css('width', width);
+            //console.log('winH:', winH, '\nheight:', height)
+
+            var mapDom = $('#allmap');
+            mapDom.meuiBaiduMap('init', {
+                city: '泉州市', //默认中心点城市
+                point: '118.611836,24.918225', //默认中心点经纬度坐标
+                isNumc: false, //地图中心点是根据城市还是坐标来设置. true 根据坐标(true), false 根据城市
+                zoom: 3, //地图缩放级别(值:3-19)
+                copyright: '福建华审评估公司版权所有 (<span style="font-size:12px">version 1.0.0</span>)', //版权信息
+                width: width - pdLeft,
+                height: winH - mnTop - pdTop - 50,
+                image: { //自定义坐标标注点图标及其它属性(可选) testing
+                    draged: false, //图标是否可拖动,默认false(可选)
+                    enable: true, //是否开启自定义图标, 默认false(可选)
+                    path: 'meui/img/', //图片文件夹相对静态文件html位置,仅当enable=true时有效(可选)
+                    icon: 'bmap_locate_blue.png' //图标文件名,仅当enable=true时有效(可选)
+                },
+                showMode: 'normal', //显示方式(可选). normal 固定显示,即在绑定节点上直接显示, click 点击显示(默认)
+                enableViewPort: true, //是否强制调整视野,即强制地图显示到某个视野,默认false(可选). 因centerAndZoom是异步,故要让使用setViewport起作用,必须设置本参数值为true.
+                autoViewPort: true, //是否系统自动调整视野,默认true,仅当enableViewPort=true时有效(可选). 值：true 系统调用setViewport自动调整视野, false 前端手动调用setViewport调整视野(需设置延时,否则不起作用)
+                callBack: function(e){ //回调：初始化后
+                    var map = e.map;
+                    var $this = e.dom;
+                    var state = 'start';
+                    runMap(state);
+                    $('#btn-map').on('click', function(){
+                        var $this = $(this);
+                        var $fa = $(this).find('.fa');
+                        if($fa.hasClass('play')){
+                            $(this).attr('title', '开始');
+                            $fa.removeClass('play').addClass('stop');
+                            state = 'end';
+                        }else{
+                            $(this).attr('title', '结束');
+                            $fa.removeClass('stop').addClass('play');
+                            state = 'start'
+                        }
+                        runMap(state);
+                    })
+                    
+                }
+            });
+
+            var timer3;
+            /**
+            * @param {string} ps_state 运行状态. start 开始运行, end 结束运行
+            */
+            function runMap(ps_state){
+                if(ps_state == 'start'){
+                    //定时执行
+                    timer3 = setInterval((function target(){
+                        var source = get_data_house();
+                        mapDom.meuiBaiduMap(
+                            'createMapPoint',
+                            source,
+                            {
+                                format: {
+                                    coordinates: '["zuobiao"]',
+                                    title: '["qydcb_mc"]<br>(["xjlb"])',
+                                    id: '["qydcb_bh"]',
+                                    description: '<em class=\"bdtitle\">["qydcb_mc"]</em><br><em class=\"bdcate\">询价类别：["xjlb"]</em><em class=\"bdaddress\">说明：["shuoming"]</em>'
+                                },
+                                dbClickMarkerAutoScale: true //是否开启双击标注点图标后地图缩放级别自动放大一级,默认false(可选)
+                            }
+                        )
+                        return target;
+                    })(), g_times3 * 1000)
+                }else{
+                    clearInterval(timer3);
+                }
+            }
+
+
+
+        }); //END $(function(){});
+
+    </script>
+
+
+</body>
+</html>

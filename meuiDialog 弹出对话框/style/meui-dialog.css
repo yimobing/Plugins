@@ -1,0 +1,275 @@
+@charset "utf-8";
+/**
+* meuiDialog.css
+* Author: ChenMufeng
+* Date： 2018.8.30
+*/
+
+html,body{width:100%;margin:0 auto;padding:0;}
+html{font-family:'Hiragino Sans GB W3','Hiragino Sans GB','microsoft yahei','Sim sun','Helvetica Neue',Helvetica,sans-sefif;font-size:20px;}
+body{font-size:.8rem; color:#212121; background:#fff; outline:0; }
+header,footer,nav,menu,article,section,figure,dialog,aside{display:block;}
+html,body,header,section,footer,div,ul,ol,li,img,a,span,em,del,legend,center,strong,var,fieldset,form,label,dl,dt,dd,cite,input,hr,time,mark,code,figcaption,figure,textarea,h1,h2,h3,h4,h5,h6,p,em,i{margin:0;border:0;padding:0;font-style:normal;}
+*{box-sizing:border-box;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-ms-box-sizing:border-box;font-style:normal;outline:0;}
+
+/*+----------弹出窗Alert--------------+*/
+.section-meuiDialog-alert{
+	position:fixed;
+	z-index:999;
+	top:20%;
+	left:0;
+	right:0;
+	margin:0 auto;
+
+}
+.alert-layout{
+	position:relative;
+	width:75%;
+	max-width:350px;
+	height:auto;
+	max-height:90%;
+	margin:0 auto;
+	
+	border-radius:4px;
+	box-shadow:0 1px 2px rgba(0,0,0,.35);
+	overflow-x:hidden;
+	overflow-y:auto;
+}
+.alert-close{}
+.alert-caption{
+	width:100%;
+	padding:10px 0;
+	background:#f9f7fa;
+	color:inherit;
+	font-weight:bold;
+	text-align:center;
+	border-radius:4px 4px 0 0;
+	font-size: 16px;
+}
+
+.alert-content{
+	width:100%;
+	padding:5px 10px 20px;
+	background-color: #f9f7fa;
+	text-align:center;
+	color:#8d8b8e;
+	font-size: 16px;
+	word-wrap: break-word;
+    word-break: break-all;
+}
+.alert-button-group{
+	display:-webkit-box;  
+	display:-moz-box; 
+	display:-ms-flexbox; 
+	display:-webkit-flex; 
+	display:flex;
+	display:box;	
+	justify-content:center;
+	background-color: #f9f7fa;
+	border-top: 1px solid #ebe9ec;
+	
+	/*ie9-*/
+	width:100%\9;
+	display:block\9;
+}
+.alert-btn{
+	padding:3px 10px;
+	background:none;
+	border:1px solid #0ae;
+	border-radius:3px;
+	background-color:#0ae;
+	color:#fff;
+	cursor:pointer;
+}
+.alert-button-group>button{
+	width:100%;
+	margin:0 auto;
+	padding:12px 15px;
+	background: #f9f7fa;
+	border-radius:0;
+	border:0;
+	border-color:#ebe9ec;
+	border-style:solid;
+	border-width:0 0 0 1px;
+	border-left:1px solid #ebe9ec;
+	color:#52db36;
+	text-align:center;
+	font-size: 18px;
+	outline:none;
+	/*ie9-*/
+	display:inline-block\9;
+	margin-left:-3px\9;
+}
+.alert-button-group>button:first-child{border-left-width:0;}
+.alert-button-group>button:hover{background-color:#eee;color:#666;}
+
+
+/*按钮颜色*/
+.alert-button-group>button.blue{color:#229ffd;}
+.alert-button-group>button.black,
+.alert-button-group>button+button{color:#666;}/*黑色*/
+.alert-button-group>button.green,
+.alert-button-group>button+button+button{color: #04BE02;}/*绿色*/
+.alert-button-group>button.red,
+.alert-button-group>button+button+button+button{color:#f64c59;}/*红色*/
+.alert-button-group>button.orange,
+.alert-button-group>button+button+button+button+button{color:#fec04e;}/*橙色*/
+.alert-button-group>button.purple,
+.alert-button-group>button+button+button+button+button+button{color:#5246e2;}/*紫色*/
+
+/*垂直按钮*/
+.alert-button-group.vertical{display:block;text-align:center;}
+.alert-button-group.vertical>button{display:block;border-width:1px 0 0 0; width:100%!important\9;}
+.alert-button-group.vertical>button:first-child{border-top-width:0;}
+/*ie9+*/
+.alert-button-group:not(.vertical)>button:nth-last-child(1):first-child{width:100%\9;} /*1个子元素*/
+.alert-button-group:not(.vertical)>button:nth-last-child(2):first-child,
+.alert-button-group:not(.vertical)>button:nth-last-child(2):first-child ~ button{width:calc(100%/2)\9;} /*2个子元素*/ /*其中 ~ 表示选择位于第1个子元素后的元素*/
+.alert-button-group:not(.vertical)>button:nth-last-child(3):first-child,
+.alert-button-group:not(.vertical)>button:nth-last-child(3):first-child ~ button:nth-last-child(1),
+.alert-button-group:not(.vertical)>button:nth-last-child(3):first-child ~ button:nth-last-child(2){width:calc(100%/3)\9;} /*3个子元素*/
+
+
+/*主题*/
+.alert-layout.theme>.alert-caption{color:#f9f7fa;}
+.alert-layout.theme>.alert-content{padding:20px 10px;}
+.alert-layout.theme>.meui-close{background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAy0lEQVRIS82V6xGCMBCEdzuwBEqhBEugBEugBEuxNDs455iMQ0KAjfEc8xey393mHkTwYbA+FoCZDQAeAEaSzx6omU0ALiTvrvPOIH249UCShgfpkOVkFvVAauIbQLLL6U2ZJPGJ5FjaW33klkzO/t2torOLaraHZXoEUQKovkHpYU1IFZcApRUAri1FIHdyinoG4I0oN+R/ANaef92i0EcOLVOlFJV/fj8qlKiUZowa15spHLFwMkjUyhxIetfnG61nF+/dlUfFp/AXaRmzGQ9op2kAAAAASUVORK5CYII=');}
+.alert-layout.blue>.alert-caption{background-color:#72d1ff;}/*蓝色*/
+.alert-layout.blue>.alert-content{color:#2b9bc5;}
+.alert-layout.black>.alert-caption{background-color:#383838;}/*黑色*/
+.alert-layout.black>.alert-content{color:#8d8b8e;}
+.alert-layout.green>.alert-caption{background-color:#52db36;}/*绿色*/
+.alert-layout.green>.alert-content{color:#52db36;}
+.alert-layout.red>.alert-caption{background-color:#f25824;}/*红色*/
+.alert-layout.red>.alert-content{color:#f25824;}
+.alert-layout.orange>.alert-caption{background-color:#fec04e;}/*橙色*/
+.alert-layout.orange>.alert-content{color:#fec04e;}
+.alert-layout.purple>.alert-caption{background-color:#5246e2;}/*紫色*/
+.alert-layout.purple>.alert-content{color:#5246e2;}
+
+
+
+/*+----------输入框feedback--------------+*/
+/*+----------弹出窗Alert--------------+*/
+.section-meuiDialog-feedback{
+	position:fixed;
+	z-index:112;
+	/*top:25%;*/
+	/* left:0; */
+	/* right:0; */
+	width:auto;
+	max-width:90%;
+	margin:0 auto;
+	/*ie*/
+	display:inline-block\9;
+	*display:inline;
+	_display:inline;
+	zoom:1;
+}
+.feedback-layout{
+	position:relative;
+	min-width:310px;
+	width:auto;
+	height:auto;
+	max-height:90%;
+	margin:0 auto;
+	padding:15px 20px;
+	background-color:#fff;
+	border-radius:4px;
+	box-shadow:0 1px 2px rgba(0,0,0,.35);
+	overflow-x:hidden;
+	overflow-y:auto;
+}
+.feedback-close{}
+.feedback-caption{width:100%; font-size:18px;}
+.feedback-caption.center{text-align:center;}
+.feedback-caption.right{text-align:right;}
+.feedback-content{
+	width:100%;
+	height:auto;
+	max-height:100%;
+	/* margin-top:10px; */
+	/* padding:8px 0; */
+	font-size:14px;
+	position: relative;
+	/*ie*/
+	display:inline-block\9;
+	*
+	display:inline;
+	_display:inline;
+	zoom:1;
+}
+
+/*嵌入的HTML*/
+.feedback-content>div{height:100%; overflow-y:auto; -webkit-overflow-scrolling:touch;}
+.feedback-content>div::-webkit-scrollbar{width:2px;}/*滚动条整体样式*/
+.feedback-content>div::-webkit-scrollbar-thumb{/*滚动条里面小方块*/
+	border-radius:5px;
+	-webkit-box-shadow:inset 0 0 5px rgba(0,0,0,.2);
+	background:rgba(0,0,0,.2);
+}
+.feedback-content>div::-webkit-scrollbar-track{ /*滚动条里面轨道*/
+	-webkit-box-shadow: inset 0 0 5px rgba(0,0,0,.1);
+	border-radius:0;
+	background:rgba(0,0,0,.1);
+}
+
+
+
+.feedback-content .feedback-input{
+	width:100%;
+	height:32px;
+	line-height:32px;
+}
+.feedback-content .feedback-textarea{
+	width:auto;
+	min-width:100%;
+	min-height:100px;
+	max-height:200px;
+	overflow-y:auto;
+}
+.feedback-content .feedback-input,
+.feedback-content .feedback-textarea{
+	padding:8px;border:1px solid #ebe9ec;
+	border-radius:3px;
+}
+.feedback-content>.feedback-input,
+.feedback-content>.feedback-textarea{
+	*min-width:290px;
+	_min-width:290px;
+	*width: 290px;
+	_width:290px;
+}
+.feedback-notes{
+	position:absolute;
+	right:10px;
+	top:50%;
+	transform:translateY(-50%);
+	-webkit-transform:translateY(-50%);
+	-moz-transform:translateY(-50%);
+	-o-transform:translateY(-50%);
+	-ms-transform:translateY(-50%);
+	color:#999;
+	font-size:12px;
+}
+
+.feedback-button-group{/* margin-top:10px; *//* border-top:1px solid #f4f1f1; *//* padding-top:10px; */text-align:right;}
+.feedback-button-group.left{text-align:left;}
+.feedback-button-group.center{text-align:center;}
+.feedback-button-group>button{
+	min-width:80px;
+	height:35px;
+	line-height:35px;
+	margin-left:15px;
+	padding:0 15px;
+	background-color:#00BFFF;
+	color:#fff;
+	border:0;
+	border-radius:3px;
+	font-size:14px;
+	cursor:pointer;
+}
+.feedback-button-group>button:hover{background-color:#4cb0f9;}
+.feedback-button-group>button:first-child{margin-left:0;}
+.feedback-button-group>button+button{background-color:#888;}
+.feedback-button-group>button+button:hover{background-color:#666;}
