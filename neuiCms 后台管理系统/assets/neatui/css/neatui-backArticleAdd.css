@@ -1,5 +1,13 @@
 @charset "utf-8";
 
+/*
+* [文章内容页 - 添加文章] 模块
+* NEUI后台管理系统
+* Author: ChenMufeng
+* Date: 2022.05.19
+* Update: 2022.05.31
+*/
+
 /*+--------------------------------+*/
 html,body{width: 100%; margin: 0 auto; padding: 0; -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color:rgba(0, 0, 0, 0); } 
 *:not(input,textarea) {-webkit-touch-callout: none; -webkit-user-select: none; }
