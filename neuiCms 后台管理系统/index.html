@@ -109,60 +109,93 @@
             	· url 菜单地址(可选)
             	· icon 菜单图标(font-awesome图标或图片URL)(可选)
             */
-            var navJson = {
-                data:[
-                    {id:"1001", title:"搜狗", url:"https://www.sogou.com/", icon:"assets/neatui/img/cms-nav-computer.png", icon_on:"assets/neatui/img/cms-login-mobile-iphone.png",},
-                    {id:"1002", title:"必应", url:"", icon:"assets/neatui/img/cms-nav-computer.png", icon_on:"assets/neatui/img/cms-login-mobile-iphone.png",
-                      data:[
-                        {id:"1021", title:"菜鸟教程", url:"https://www.runoob.com/", "icon":"scissors"},
-                        {id:"1022", title:"必应搜索", url:"https://cn.bing.com/", "icon":"search", data:[]}
-                      ]
-                    },
-                    {id:"1003", title:"360", url:"", icon:"assets/neatui/img/cms-nav-computer.png", icon_on:"assets/neatui/img/cms-login-weixin.png",
-                      data:[
-                        {id:"1023", title:"360搜索", url:"", icon:"assets/neatui/img/cms-nav-computer.png", icon_on:"assets/neatui/img/cms-login-user.png",
-                          data:[
-                            {id:"1031", title:"关键词", url:""},
-                            {id:"1032", title:"下拉词", url:""},
-                            {id:"1033", title:"联想词", url:""}
-                          ]
-                        },
-                        {id:"1024", title:"360联盟", url:"", icon:"assets/neatui/img/cms-nav-computer.png",
-                          data:[
-                            {id:"1034", title:"SSP联盟", url:"", icon:"assets/neatui/img/cms-nav-computer.png",
-                              data:[
-                                {id:"1041", title:"按万IP"},
-                                {id:"1042", title:"按点击"}
-                              ]
-                            },
-                            {id:"1034", title:"网络联盟", url:"", icon:"assets/neatui/img/cms-nav-computer.png",
-                              data:[
-                                {id:"1041", title:"CCPI"},
-                                {id:"1042", title:"CCPV"}
-                              ]
+          var navJson = {
+            data: [{
+                    id: "1001",
+                    title: "搜狗",
+                    url: "https://www.sogou.com?w=5",
+                    icon: "assets/neatui/img/cms-nav-computer.png",
+                    icon_on: "assets/neatui/img/cms-login-mobile-iphone.png",
+                    value1: "aaa",
+                    value2: "bbb"
+                },{
+                    id: "1002",
+                    title: "必应",
+                    url: "",
+                    icon: "assets/neatui/img/cms-nav-computer.png",
+                    icon_on: "assets/neatui/img/cms-login-mobile-iphone.png",
+                    data: [{
+                        id: "1021",
+                        title: "菜鸟教程",
+                        url: "https://www.runoob.com",
+                        icon: "scissors"
+                    }, {
+                        id: "1022",
+                        title: "必应搜索",
+                        url: "https://cn.bing.com",
+                        icon: "search",
+                        data: []
+                    }]
+                },{
+                    id: "1003",
+                    title: "360",
+                    url: "",
+                    icon: "assets/neatui/img/cms-nav-computer.png",
+                    icon_on: "assets/neatui/img/cms-login-weixin.png",
+                    data: [{
+                        id: "1023",
+                        title: "360搜索",
+                        url: "",
+                        icon: "assets/neatui/img/cms-nav-computer.png",
+                        icon_on: "assets/neatui/img/cms-login-user.png",
+                        data: [
+                            { id: "1031", title: "关键词", url: "" },
+                            { id: "1032", title: "下拉词", url: "" },
+                            { id: "1033", title: "联想词", url: "" }
+                        ]
+                    },{
+                        id: "1024",
+                        title: "360联盟",
+                        url: "",
+                        icon: "assets/neatui/img/cms-nav-computer.png",
+                        data: [{
+                                id: "1034", title: "SSP联盟", url: "", icon: "assets/neatui/img/cms-nav-computer.png",
+                                data: [
+                                    { id: "1041", title: "按万IP" },
+                                    { id: "1042", title: "按点击" }
+                                ]
+                            },{
+                                id: "1034", title: "网络联盟", url: "", icon: "assets/neatui/img/cms-nav-computer.png",
+                                data: [
+                                    { id: "1041", title: "CCPI" },
+                                    { id: "1042", title: "CCPV" }
+                                ]
                             }
-                          ]
-                        }
-                      ]
-                    },
-                    {id:"1004", title:"百度", url:"", icon:"assets/neatui/img/cms-nav-computer.png",
-                      data:[
-                        {id:"1024", title:"百度搜索", url:"", icon:"assets/neatui/img/cms-nav-computer.png",
-                          data:[
-                            {id:"1034", title:"关键词搜索", url:"", icon:"assets/neatui/img/cms-nav-computer.png",
-                              data:[
-                                {id:"1041", title:"指数词", url:""},
-                                {id:"1042", title:"排名词", url:""},
-                                {id:"1043", title:"流量词", url:""},
-                                {id:"1044", title:"热点词", url:""}
-                              ]
+                        ]
+                    }]
+                },
+                {
+                    id: "1004",
+                    title: "百度",
+                    url: "",
+                    icon: "assets/neatui/img/cms-nav-computer.png",
+                    data: [{
+                        id: "1024", title: "百度搜索", url: "", icon: "assets/neatui/img/cms-nav-computer.png",
+                        data: [
+                            {
+                                id: "1034", title: "关键词搜索", url: "", icon: "assets/neatui/img/cms-nav-computer.png",
+                                data: [
+                                    { id: "1041", title: "指数词", url: "" },
+                                    { id: "1042", title: "排名词", url: "" },
+                                    { id: "1043", title: "流量词", url: "" },
+                                    { id: "1044", title: "热点词", url: "" }
+                                ]
                             }
-                          ]
-                        }
-                      ]
-                    }
-                ]
-            }
+                        ]
+                    }]
+                }
+            ]
+        }
 
 
 
@@ -218,6 +251,8 @@
                 navSource: navJson, // 左侧导航栏数据源. 最多支持四级菜单
                 navFormat: ["id", "title", "url", "icon", "icon_on"], // 自定义左侧导航栏数据源字段格式(可选)
                 // navFormat: ["编号", "名称", "地址", "默认的图标", "高亮时的图标"], 
+                navParam: ["value1", "value2"], // 菜单链接地址参数，默认空数组(可选)。eg.格式： ["value1", "value2", ... ]，则系统会自动把这个数组中的N个元素添加到菜单链接地址中作为参数来传递，并从参数navSource中取到value1,value2两个字段的值(假设值分别为1001, 1002)。此时链接地址变为：http://www.xx.com?value1=1001&value2=1002
+
                 sidebar: { // 侧栏
                     isFixed: true, // 是否固定侧栏(可选)。默认true
                     width: 260, // 自定义侧栏宽度(可选)。默认260px

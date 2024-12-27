@@ -470,7 +470,7 @@
 					})
 					if (paramStr != '') {
 						// 判断原来链接地址中是否已有参数
-						// var reg = /\?(.*)\=(.*)(&(.*)\=(.*))?/;
+						// var reg1 = /\?(.*)\=(.*)(&(.*)\=(.*))?/;
 						var reg = /\?.*=.*/;
 						if (reg.test(_url) == false) { // false 表示原链接地址中没有参数
 							paramStr = paramStr.substring(1, paramStr.length); // 去掉字符串的第1个字符连字符&
@@ -480,7 +480,7 @@
 				}
 				// console.log('paramStr：', paramStr);
 				
-				// test20230530 edit 20241222-1
+				// test20230530
 				var _urlStr = _url == '' ?
 					'' :
 					(
@@ -510,8 +510,11 @@
 				var _emStr = self.settings.sidebar.isShowTreeIcon ? '<em class="item-link_symbolsIcon' + emClass + '"></em>' : '';
 				var _iStr = self.settings.sidebar.isShowArrowIcon ? '<i class="item-link_directionIcon' + iClass + '"></i>' : '';
 
+				// 菜单项随机ID属性
+				var liItemClassName = 'nav_item_' + Math.random().toString(36).substr(2); // 生成N位随机数(字母+数字组成)
+
 				menuAllHtml += [
-					'<li class="sidebar-nav-item">',
+					'<li class="sidebar-nav-item" id="' + liItemClassName + '">',
 						// test202305301
 						'<a' + _urlStr + _targetStr + ' class="nav-item-link' + linkClass + '"' + _dataIdStr + ' title="' + _title + '">',
 							_emStr, 
@@ -662,152 +665,175 @@
 			$('.sidebar-nav-item').off('click').on('click', function (e) {
 				e.stopPropagation();
 				var _this = $(this);
-				var _bh = _this.children('a').attr('data-bh'),
-					_text = _this.children('a').children('span').text();
-				// test202305301
-				if (self.useTabPage == false) { // 不使用标签页时
-					var _url = _this.children('a').attr('href');
-					if (typeof _url == 'undefined') _url = '';
-					if (_url.indexOf('javascript') < 0) { // iframe添加链接（实际上当a标签指定target值为iframe的name属性值，这里就没必要了
-						$('#cms-frame-body').attr('src', _url);
-					}
+				var id = $(this).attr('id');
+				// console.log('id:', id);
+				self.navItemClickEvent(id, e);
+			});
+
+		},
+
+
+		/**
+		 * 菜单项点击事件
+		 * @param {HTMLElement} _this 当前点击的菜单项元素的ID属性
+		 * @param {Object} e 当前菜单项元素点击事件参数event(可选)
+		 */
+		navItemClickEvent: function(ids, e) {
+			var self = this;
+			var _this = $(document.getElementById(ids));
+			var _bh = _this.children('a').attr('data-bh'),
+				_text = _this.children('a').children('span').text();
+			// test202305301
+			if (self.useTabPage == false) { // 不使用标签页时
+				var _url = _this.children('a').attr('href');
+				if (typeof _url == 'undefined') _url = '';
+				if (_url.indexOf('javascript') < 0) { // iframe添加链接（实际上当a标签指定target值为iframe的name属性值，这里就没必要了
+					$('#cms-frame-body').attr('src', _url);
 				}
-				else { // 有使用标签页时
-					var _url = _this.children('a').attr('data-url');
-					if (typeof _url == 'undefined') _url = '';
-					if ($(this).children('.nav-item-collapse').length == 0) { // 只要没有子菜单的，都可以以标签方式打开。有子菜单的统一打不开
-						
-						// 按住ctrl键时，同时在浏览器中打开页面 add 20230601-1
+			}
+			else { // 有使用标签页时
+				var _url = _this.children('a').attr('data-url');
+				if (typeof _url == 'undefined') _url = '';
+				console.log('_url：', _url);
+				if (_this.children('.nav-item-collapse').length == 0) { // 只要没有子菜单的，都可以以标签方式打开。有子菜单的统一打不开
+					
+					// 按住ctrl键时，同时在浏览器中打开页面 add 20230601-1 testing
+					if (typeof e != 'undefined' && e != null) {
 						var event = e || window.event;
 						if (self.settings.isCtrlOpenTabPage && event.ctrlKey) {
 							if (_url != '') {
 								window.open(_url, '_blank');
 							}
 						}
-						//
-						var randChar = Math.random().toString(36).substr(2); // 生成N位随机数(字母+数字组成)
-						var _tabGroupIds = 'cms-tab-group-' + randChar;
-						// 判断是否标签页是否已打开，如果是，则不再创建新标签页
-						var isExistedTab = false;
-						var isExistedIndex = -1;
-						$('.backstage__content').children().each(function (index) {
-							var _tmpUrl = $(this).attr('src');
-							var _tmpTitle = $('.backstage__tabs ul').children().eq(index).find('.backstage__tabs_text').text();
-							if (_tmpUrl == _url && _tmpTitle == _text) { // 
-								isExistedTab = true;
-								isExistedIndex = index;
-								return false;
+					}
+					//
+					var randChar = Math.random().toString(36).substr(2); // 生成N位随机数(字母+数字组成)
+					var _tabGroupIds = 'cms-tab-group-' + randChar;
+					// 判断是否标签页是否已打开，如果是，则不再创建新标签页
+					var isExistedTab = false;
+					var isExistedIndex = -1;
+					$('.backstage__content').children().each(function (index) {
+						var _tmpUrl = $(this).attr('src');
+						var _tmpTitle = $('.backstage__tabs ul').children().eq(index).find('.backstage__tabs_text').text();
+						if (_tmpUrl == _url && _tmpTitle == _text) { // 
+							isExistedTab = true;
+							isExistedIndex = index;
+							return false;
+						}
+					});
+					if (isExistedTab) {
+						// 显示当前标签页
+						$('.backstage__tabs ul').children().removeClass('active').eq(isExistedIndex).addClass('active');
+						$('.backstage__content').children().hide().eq(isExistedIndex).show();
+						// 自动调整标签页可视范围：让当前标签页在可视区域内，即如果当前标签页超过可视区域，则要左右滚动一下让它显示出来 add 20230601-1
+						var currentW = 0;
+						$('.backstage__tabs ul').children().each(function (i) {
+							var w = $(this).outerWidth(true);
+							if (i <= isExistedIndex) {
+								currentW += w + 8; // 8 是每个标签页的margin-left right距离和
+								// console.log('累加：', currentW);
 							}
 						});
-						if (isExistedTab) {
-							// 显示当前标签页
-							$('.backstage__tabs ul').children().removeClass('active').eq(isExistedIndex).addClass('active');
-							$('.backstage__content').children().hide().eq(isExistedIndex).show();
-							// 自动调整标签页可视范围：让当前标签页在可视区域内，即如果当前标签页超过可视区域，则要左右滚动一下让它显示出来 add 20230601-1
-							var currentW = 0;
-							$('.backstage__tabs ul').children().each(function (i) {
-								var w = $(this).outerWidth(true);
-								if (i <= isExistedIndex) {
-									currentW += w + 8; // 8 是每个标签页的margin-left right距离和
-									// console.log('累加：', currentW);
-								}
-							});
-							var rollW = $('.tabs__scroller_inner').outerWidth(true);
-							var minusW = currentW - rollW;
-							// console.log('所有标签宽：', rollW);
-							// console.log('当前标签所在位置宽：', currentW);
-							// console.log('minusW：', minusW);
-							// console.log('---------------');
-							var scrollLeft = $('.tabs__scroller_inner ul')[0].scrollLeft;
-							if (minusW > 0) {
-								$('.tabs__scroller_inner ul')[0].scrollLeft += Math.abs(minusW); // 相当于点击选择卡栏右箭头
-							}
-							else {
-								// $('.tabs__scroller_inner ul')[0].scrollLeft -= Math.abs(minusW); // 相当于点击选择卡栏左箭头
-								$('.tabs__scroller_inner ul')[0].scrollLeft = -scrollLeft;  // 相当于点击选择卡栏左箭头
-							}
-							return;
+						var rollW = $('.tabs__scroller_inner').outerWidth(true);
+						var minusW = currentW - rollW;
+						// console.log('所有标签宽：', rollW);
+						// console.log('当前标签所在位置宽：', currentW);
+						// console.log('minusW：', minusW);
+						// console.log('---------------');
+						var scrollLeft = $('.tabs__scroller_inner ul')[0].scrollLeft;
+						if (minusW > 0) {
+							$('.tabs__scroller_inner ul')[0].scrollLeft += Math.abs(minusW); // 相当于点击选择卡栏右箭头
 						}
-						// $('#cms-frame-body').attr('src', _url);	
-						// 添加新标签页
-						var oneTabHtml = [
-							'<li class="active" id="' + _tabGroupIds + '" title="' + _text + '">',
-								'<span class="backstage__tabs_text">' + _text + '</span>',
-								'<span class="backstage__tabs_close">关闭</span>',
-							'</li>'
-						].join('\r\n');
-						$('.backstage__tabs ul').children().removeClass('active');
-						$('.backstage__tabs ul').append(oneTabHtml);
+						else {
+							// $('.tabs__scroller_inner ul')[0].scrollLeft -= Math.abs(minusW); // 相当于点击选择卡栏左箭头
+							$('.tabs__scroller_inner ul')[0].scrollLeft = -scrollLeft;  // 相当于点击选择卡栏左箭头
+						}
+						return;
+					}
+					// $('#cms-frame-body').attr('src', _url);	
+					// 添加新标签页
+					var oneTabHtml = [
+						'<li class="active" id="' + _tabGroupIds + '" title="' + _text + '">',
+							'<span class="backstage__tabs_text">' + _text + '</span>',
+							'<span class="backstage__tabs_close">关闭</span>',
+						'</li>'
+					].join('\r\n');
+					$('.backstage__tabs ul').children().removeClass('active');
+					$('.backstage__tabs ul').append(oneTabHtml);
 
-						// 标签页使用右键菜单 add 20230719-1
-						if (self.settings.isTabUseContextMenu) {
-							self.addContextMenu();
-						}
+					// testing
+					var $elOLI = document.getElementById(_tabGroupIds);
+					$elOLI.dataset.dataNavItem = JSON.stringify(_this);
 
-						// 标签页栏箭头：宽度超过一屏时，显示左右箭头
-						var allTabW = 0;
-						$('.tabs__scroller_inner li').each(function () {
-							var _w = parseFloat($(this).outerWidth(true));
-							allTabW += _w + 8; // 8 是每个标签页的margin-left right距离和
-						});
-						var parentW = parseFloat($('.tabs__scroller_inner').outerWidth(true));
-						if (allTabW > parentW) {
-							// 显示左右箭头
-							$('.tabs__scroller_left, .tabs__scroller_right').show();
-							$('.tabs__scroller_inner').addClass('can-scroller');
-							// 自动调整标签页可视范围：让当前标签页在可视区域内，即如果当前标签页超过可视区域，则要左右滚动一下让它显示出来 add 20230601-1
-							$('.tabs__scroller_inner ul')[0].scrollLeft += Math.abs(allTabW - parentW); // 相当于点击选择卡栏右箭头
-						}
-						// 添加新FRAME
-						var frameHtml = '<iframe name="cms-frame-name" scrolling="yes" frameborder="0" class="cms-frame-content" id="' + _tabGroupIds + '" src="' + _url + '"></iframe>';
-						$('.backstage__content').children().hide();
-						$('.backstage__content').append(frameHtml);
+					// 标签页使用右键菜单 add 20230719-1
+					if (self.settings.isTabUseContextMenu) {
+						self.addContextMenu(ids);
+					}
+
+					// 标签页栏箭头：宽度超过一屏时，显示左右箭头
+					var allTabW = 0;
+					$('.tabs__scroller_inner li').each(function () {
+						var _w = parseFloat($(this).outerWidth(true));
+						allTabW += _w + 8; // 8 是每个标签页的margin-left right距离和
+					});
+					var parentW = parseFloat($('.tabs__scroller_inner').outerWidth(true));
+					if (allTabW > parentW) {
+						// 显示左右箭头
+						$('.tabs__scroller_left, .tabs__scroller_right').show();
+						$('.tabs__scroller_inner').addClass('can-scroller');
+						// 自动调整标签页可视范围：让当前标签页在可视区域内，即如果当前标签页超过可视区域，则要左右滚动一下让它显示出来 add 20230601-1
+						$('.tabs__scroller_inner ul')[0].scrollLeft += Math.abs(allTabW - parentW); // 相当于点击选择卡栏右箭头
+					}
+					// 添加新FRAME
+					var frameHtml = '<iframe name="cms-frame-name" scrolling="yes" frameborder="0" class="cms-frame-content" id="' + _tabGroupIds + '" src="' + _url + '"></iframe>';
+					$('.backstage__content').children().hide();
+					$('.backstage__content').append(frameHtml);
+				}
+			}
+			if (self.settings.sidebar.callback) self.settings.sidebar.callback({ "id": _bh, "title": _text, "url": _url });
+
+			// 当浏览器出现垂直滚动条时(待完善)
+			var _pageH = $(document.body).height(); // 页面高度
+			var _scrollT = $(window).scrollTop(); // 滚动条top
+			var _aa = _pageH - $(window).height() - _scrollT;
+			var _browserW = 20; // 浏览器滚动条宽度，一般14-20px
+			var _mainW = $('.mainbody').outerWidth(true),
+				_mainH = $('.mainbody').outerHeight(true);
+			// 右侧主体区域与左侧是否保留一定距离
+			var _minusPadW = self.settings.mainBar.enablePad ? self.settings.mainBar.padDistance : 0;
+			//console.log('_scrollT:',_scrollT, ' _aa:', _aa);
+			if (_aa > 0) {
+				// test20230530
+				if (self.settings.useTabPage == false) {
+					$('.mainbody').css({ 'height': _mainH + _scrollT });
+					$('#cms-frame-body').css({ 'height': _mainH + _scrollT });
+				}
+				else {
+					$('.backstage__content').css({ 'height': _mainH + _scrollT });
+					$('#' + _tabGroupIds).css({ 'height': _mainH + _scrollT });
+				}
+				if (!isBreak) { // 只有第1个出现浏览器滚动条时才需要调整宽度
+					$('.mainbody').css({ 'width': _mainW - _browserW - _minusPadW });
+					if (_minusPadW != 0) {
+						$('.mainbody').css({ 'margin-top': _minusPadW });
 					}
 				}
-				if (self.settings.sidebar.callback) self.settings.sidebar.callback({ "id": _bh, "title": _text, "url": _url });
-
-				// 当浏览器出现垂直滚动条时(待完善)
-				var _pageH = $(document.body).height(); // 页面高度
-				var _scrollT = $(window).scrollTop(); // 滚动条top
-				var _aa = _pageH - $(window).height() - _scrollT;
-				var _browserW = 20; // 浏览器滚动条宽度，一般14-20px
-				var _mainW = $('.mainbody').outerWidth(true),
-					_mainH = $('.mainbody').outerHeight(true);
-				// 右侧主体区域与左侧是否保留一定距离
-				var _minusPadW = self.settings.mainBar.enablePad ? self.settings.mainBar.padDistance : 0;
-				//console.log('_scrollT:',_scrollT, ' _aa:', _aa);
-				if (_aa > 0) {
-					// test20230530
-					if (self.settings.useTabPage == false) {
-						$('.mainbody').css({ 'height': _mainH + _scrollT });
-						$('#cms-frame-body').css({ 'height': _mainH + _scrollT });
-					}
-					else {
-						$('.backstage__content').css({ 'height': _mainH + _scrollT });
-						$('#' + _tabGroupIds).css({ 'height': _mainH + _scrollT });
-					}
-					if (!isBreak) { // 只有第1个出现浏览器滚动条时才需要调整宽度
-						$('.mainbody').css({ 'width': _mainW - _browserW - _minusPadW });
-						if (_minusPadW != 0) {
-							$('.mainbody').css({ 'margin-top': _minusPadW });
-						}
-					}
-					isBreak = true;
-				}
-			});
-
+				isBreak = true;
+			}
 		},
-
 
 
 		/**
 		 * 标签页使用右键菜单 
+		 * @param {HTMLElement} ids 当前点击的菜单项元素的ID属性值
 		 * add 20230719-1
 		 */
-		addContextMenu: function () {
+		addContextMenu: function (ids) {
+			// console.log("当前点击的菜单项：", $elNavItem);
 			var self = this;
 			var contextMenuHtml = [
 				'<div class="context__menu">',
+					'<div class="context__one" data-close="refresh">刷新</div>', // add 2024122-1
 					'<div class="context__one" data-close="self">关闭</div>',
 					'<div class="context__one" data-close="other">关闭其他</div>',
 					'<div class="context__one" data-close="all">关闭所有</div>',
@@ -845,6 +871,7 @@
 					// console.log('当前标签页对象：', currentTabObj);
 					if (currentTabObj == null || currentTabObj.length == 0) return;
 					var closeObj = $(currentTabObj).find('.backstage__tabs_close');
+					
 					if (cType == 'self') {
 						self.fnCloseCurrentTab(closeObj);
 					}
@@ -854,11 +881,29 @@
 					else if (cType == 'all') {
 						self.fnCloseAllTab(closeObj);
 					}
+					else if (cType == 'refresh') {  // add 2024122-1
+						self.fnReloadCurrentTab(closeObj, ids);
+					}
 				});
 			});
 		},
 
 
+
+		/**
+		 * 刷新当前页面、重载当前标签页
+		 * @param {HTML document} _this 当前标签页打叉图标对象
+		 * @param {HTMLElement} liId 当前点击的菜单项元素的ID属性值
+		 *  add 2024122-1 testing
+		 */
+		fnReloadCurrentTab: function ($elCloseCross, liId) {
+			var self = this;
+			var $li = $elCloseCross.parent('li');
+			var index = $li.index();
+			if(index < 0) return;
+			self.fnCloseCurrentTab($elCloseCross); // 先关闭当前标签页
+			self.navItemClickEvent(liId); // 再重新打开
+		},
 
 		/**
 		 * 关闭其它标签页
