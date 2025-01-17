@@ -72,6 +72,18 @@
         if(logoDom.children.length != 0){
             logoDom.classList += ' has-custom-logo';
         }
+		
+		
+		//——————————————————————————————————————————
+        // add 20250117-1
+        var isLogoCovered = false; // logo图标是否平铺满
+        if(isLogoCovered){
+            logoDom.classList += ' cover-overspread';
+        }
+        var isPhotoCovered = false; // 产品图是否平铺满
+        if(isLogoCovered){
+            photoDom.classList += ' cover-overspread';
+        }
 
 
 

@@ -240,7 +240,8 @@
 			
 			var stretLeft = parseFloat(self.settings.sidebar.width);
 			var _stretchIClass = self.settings.sidebar.defaultStretch !== false ? '' : ' class="arrow"';
-			var _stretchLeftStr = self.settings.sidebar.defaultStretch !== false ?  (stretLeft + 0)  : 0; // edit 20230606-1
+			var _stretchLeftStr = self.settings.sidebar.defaultStretch !== false ? (stretLeft + 0) : 0; // edit 20230606-1
+			var _logoClassStr = self.settings.system.covered == false ? '' : ' class="cover-overspread"';
 			var _stretchStyle = ' style="left:' + _stretchLeftStr + 'px;"';
 			var all_html = [
 				'<main class="mainDiv" style="margin-top:' + topH + 'px">',
@@ -302,7 +303,7 @@
 								if(self.settings.sidebar.isShowBrand && (self.settings.userInfo && !$.isEmptyObject(self.settings.userInfo))){
 									tmpHtml +=[
 										'<div class="sidebar-brand">',
-											'<img src="' + logoPNG + '" alt="">',
+											'<img src="' + logoPNG + '" title="' + self.settings.system.webtitle + '" alt="' + self.settings.system.webtitle + '"' + _logoClassStr + '>',
 											'<span class="sidebar-brand-logo" style="display: none"></span>',
 											'<span class="sidebar-brand-text">' + self.settings.system.webtitle + '</span>',
 										'</div><!--/.sidebar-brand-->'

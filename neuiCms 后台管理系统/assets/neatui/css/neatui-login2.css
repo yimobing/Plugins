@@ -110,13 +110,26 @@ body {
     background: transparent url('../img/cms-login-photo.png') 0% 0% / 100% auto no-repeat scroll;
 }
 .login__photo.has-custom-photo{
+    display: -webkit-box;
+    display: -moz-box;
+    display: -webkit-flex;
+    display: flex;
+    display: box;
+    align-items: center;
     background: none;
 }
 .login__photo img{
     display: block;
     width: 100%;
     height: auto;
+    max-height: 445px;
 }
+
+/* 产品图平铺满 */
+.login__photo.cover-overspread img{
+    max-height: 98%;
+}
+
 .login__subcontent{
     -webkit-flex: 1;
     -moz-flex: 1;
@@ -136,6 +149,11 @@ body {
     width: 50px;
     height: 50px;
     background: transparent url('../img/cms-logo.png') 50% 50% / 100% auto scroll;
+}
+/* logo图标平铺满 */
+.login__logo.cover-overspread{
+    width: auto;
+    height: auto;
 }
 .login__logo.has-custom-logo{
     background: none;
