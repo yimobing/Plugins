@@ -3,7 +3,7 @@
 * NEUI后台管理系统v.20
 * Author: ChenMufeng
 * Date: 2019.11.15
-* Update: 2023.07.05
+* Update: 2025.05.09
 */
 
 /*+--------------------------------------+*/
@@ -869,6 +869,9 @@ body {}
 }
 
 .nav-item-link.at-left .item-link_title {
+    margin-left: 12px;
+}
+.nav-item-link.at-left .item-link_menuIcon + .item-link_title {
     margin-left: 33px;
 }
 
