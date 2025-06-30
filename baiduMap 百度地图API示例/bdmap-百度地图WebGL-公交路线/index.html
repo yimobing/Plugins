@@ -1,0 +1,106 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<style type="text/css">
+		body, html {
+			width: 100%;
+			height: 100%; 
+			margin:0;
+			font-family:"微软雅黑";
+		}
+        #l-map{
+            height:100%;
+            width:100%;
+		}
+		#driving_way{
+			position: fixed;
+            top: 10px;
+            right: 20px;
+            width: 270px;
+            height: 450px;
+            background: #fff;
+            box-shadow: 0 2px 6px 0 rgba(27, 142, 236, 0.5);
+            border-radius: 7px;
+			z-index: 99;
+			padding: 10px
+		}
+		#result{
+			height: 400px;
+            overflow-y: auto;
+		}
+	</style>
+	<script type="text/javascript" src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=2COzFaICuIyVj7V3VetKfmdRVnX8BhVr"></script>
+	<script src="https://code.bdstatic.com/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+	<title>根据起终点经纬度查询公交换乘</title>
+</head>
+<body>
+	<div id="l-map"></div>
+	<div id="driving_way">
+		<select>
+            <option value="0">推荐方案</option>
+			<option value="1">最少时间</option>
+			<option value="2">最少换乘</option>
+			<option value="3">最少步行</option>
+			<option value="4">不乘地铁</option>
+            <option value='5'>优先地铁</option>
+		</select>
+        <button id='search'>查询</button>
+        <p id='result'></p>
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	// 百度地图API功能
+	var map = new BMapGL.Map("l-map");         
+	map.centerAndZoom(new BMapGL.Point(118.622023,24.927065), 14);
+
+	var start = new BMapGL.Point(118.593277,24.917104)    //"泉州古城";
+	var end = new BMapGL.Point(118.656518,24.917104);               //"中骏世界城";
+	var routePolicy = [BMAP_TRANSIT_POLICY_RECOMMEND,BMAP_TRANSIT_POLICY_LEAST_TIME,BMAP_TRANSIT_POLICY_LEAST_TRANSFER,BMAP_TRANSIT_POLICY_LEAST_WALKING,BMAP_TRANSIT_POLICY_AVOID_SUBWAYS,BMAP_TRANSIT_POLICY_FIRST_SUBWAYS];
+	var transit = new BMapGL.TransitRoute(map, {
+			renderOptions: {map: map, panel: 'result'},
+            policy: 0,
+            // 检索完成后的回调函数。参数：results: TransitRouteResult，公交导航结果
+            onSearchComplete: function(results){
+                console.log('e1-onSearchComplete');
+                console.log('results：', results);
+                console.log('-------------------');
+            },
+            // 标注添加完成后的回调函数。参数：pois: Array ，起点和目的地数组。transfers: Array ，公交车站数组
+            onMarkersSet: function(pois, transfers){
+                console.log('e2-onMarkersSet');
+                console.log('pois：', transfers);
+                console.log('transfers：', transfers)
+                console.log('-------------------');
+            },
+            // 气泡内容创建后的回调函数。参数：poi: LocalResultPoi，表示当前气泡对应的点（可以是起点、终点或换乘车站）html: HTMLElement，气泡内的DOM元素
+            onInfoHtmlSet: function(poi, html){
+                console.log('e3-onInfoHtmlSet');
+                console.log('poi：', poi);
+                console.log('html：', html);
+                console.log('-------------------');
+            },
+            // 折线添加完成后的回调函数。参数：lines: Array ，公交线路数组。routes: Array ，步行线路数组，通过Route.getPolyline()方法可得到对应的折线覆盖物
+            onPolylinesSet: function(lines, routes){
+                console.log('e4-onPolylinesSet');
+                console.log('e4-routes：', lines);
+                console.log('-------------------');
+            },
+            // 结果列表添加完成后的回调函数。参数：container: 结果列表所用的HTML元素
+            onResultsHtmlSet: function(container){
+                console.log('e5-onResultsHtmlSet');
+                console.log('container：', container);
+                console.log('-------------------');
+            }
+	});
+	$("#search").click(function(){
+		map.clearOverlays(); 
+		var i= $("#driving_way select").val();
+		search(start,end,routePolicy[i]); 
+		function search(start,end,route){ 
+			transit.setPolicy(route);
+            transit.search(start,end);
+		}
+	});
+</script>
